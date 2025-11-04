@@ -4,27 +4,25 @@ import MapImageDot from "./MapImageDot";
 import { useRef, useEffect, useState } from "react";
 
 export default function Map({url}) {
-  const [mapDimentions, setMapDimentions] = useState(() => {return {hight:0,width:0}})
+  const [mapDots,setMapDots] = useState(() => [])
   const mapImg = useRef(null);
   console.log("Starting Map componant for url", url);
 
   //getAPIitems from URL
   useEffect(() => {
-
+    fetch(url)
+    .then(r => r.json())
+    .then((data) => console.log(data));
   },[])
 
 
-  //handle setting adjusting the width of the viewbox
-  useEffect(() => {
-    setMapDimentions({hight:mapImg.current.naturalHeight * .6, width:mapImg.current.naturalWidth * .45});
-  },[mapImg.current,window.inner]
-  );
   const scale = .908
   return (
     //709.549 3355.049"
     <div className="map">
       <img ref={mapImg}  src={map}></img> 
       <svg  viewBox={`0 0 ${700.549 * scale} ${3455.049 * scale}`}>
+        {/* <MapImageDot ID={1} X={200} Y={20} onClick={()=>{}}/> */}
         <path
           transform="translate(-36,-20)"
           stroke="green"

@@ -3,15 +3,16 @@ itself. It's also passed an Onclick to handle opening and closing the picture th
 attatched to it
 */
 export default function MapImageDot({ID,X,Y,onClick}) {
+    console.log(ID,X,Y);
     const style =  {
         postition:"Absolute",
-        top:{X},
-        left:{Y},
-        backgroundColor:"red"
+        cx:X,
+        cy:Y,
         }
 
   return (
       <circle
+        className="Dot"
         style={style}
         onClick={()=>{onClick(ID)}}
       />

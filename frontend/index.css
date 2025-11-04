@@ -16,3 +16,9 @@ map svg {
     z-index: 10;
 }
 
+
+svg .Dot {
+    r:4.5;
+    fill:red;
+    color:"red"
+}

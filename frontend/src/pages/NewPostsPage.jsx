@@ -6,7 +6,7 @@ export default function NewPostsPage(){
   return (
      <>
       <h1>Map!</h1>
-      <Map url="localhost:3000/api/test" />
+      <Map url="http://localhost:3000/api/test" />
     </>
   );  
 }
