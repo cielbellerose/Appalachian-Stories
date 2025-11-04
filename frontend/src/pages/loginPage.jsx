@@ -1,4 +1,5 @@
 import LoginForm from "../components/LoginForm";
+import TrailNavbar from "../components/NavBar";
 import RegisterForm from "../components/RegisterForm";
 
 export default function LoginPage() {
@@ -6,6 +7,7 @@ export default function LoginPage() {
 
   return (
     <>
+      <TrailNavbar />
       <LoginForm />
       <RegisterForm />
     </>
