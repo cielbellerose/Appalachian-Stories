@@ -12,13 +12,20 @@
     height: auto;
 }
 
-map svg {
-    z-index: 10;
+.map img {
+    z-index: auto;
+}
+
+svg path {
+    z-index: 1;
 }
 
 
 svg .Dot {
     r:4.5;
     fill:red;
-    color:"red"
+    color:"red";
+    transform: translate(-36px,-20px);
+    z-index: 2;
+
 }

@@ -4,16 +4,33 @@ import MapImageDot from "./MapImageDot";
 import { useRef, useEffect, useState } from "react";
 
 export default function Map({url}) {
-  const [mapDots,setMapDots] = useState(() => [])
+  const [mapDots,setMapDots] = useState([])
   const mapImg = useRef(null);
+  const trail = useRef(null);
   console.log("Starting Map componant for url", url);
 
+  //convert the data in the JSON to real things on the page
+  const processJson = (json) => {
+    const convertertedCooodinates = json.staticTestCoodinates.map((data) => {
+      const onMap = {};
+      const length = trail.current.getTotalLength();
+      const point = trail.current.getPointAtLength(length * (data.percent / 100));
+      onMap.X = point.x;
+      onMap.Y = point.y;
+      onMap.ID = data.ID;
+      return onMap;
+    })    
+    console.log(convertertedCooodinates);
+    setMapDots(convertertedCooodinates);
+    //console.log(json.staticTestCoodinates)
+  }
   //getAPIitems from URL
   useEffect(() => {
     fetch(url)
     .then(r => r.json())
-    .then((data) => console.log(data));
+    .then((data) => processJson(data));
   },[])
+  
 
 
   const scale = .908
@@ -21,13 +38,15 @@ export default function Map({url}) {
     //709.549 3355.049"
     <div className="map">
       <img ref={mapImg}  src={map}></img> 
-      <svg  viewBox={`0 0 ${700.549 * scale} ${3455.049 * scale}`}>
+      <svg  viewBox={`0 0 ${700.549 * scale} ${3652.86 * scale}`}>
         {/* <MapImageDot ID={1} X={200} Y={20} onClick={()=>{}}/> */}
+        {mapDots.map((dot) => <MapImageDot key={dot.ID} X={dot.X} Y={dot.Y} onClick={()=>{console.log(`dot ${dot.ID} clicked`)}}/>)}
         <path
+          ref={trail}
           transform="translate(-36,-20)"
           stroke="green"
           fill="none"
-          strokeWidth="1"
+          strokeWidth="2"
           d={mappify.ATPath}
         ></path>
       </svg>
