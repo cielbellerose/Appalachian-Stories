@@ -1,14 +1,20 @@
 import LoginForm from "../components/LoginForm";
 import TrailNavbar from "../components/NavBar";
 import RegisterForm from "../components/RegisterForm";
+import { useState } from "react";
 
 export default function LoginPage() {
-  console.log("Hello from React!");
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <>
       <TrailNavbar />
-      <LoginForm />
+      {isLogin ? (
+        <LoginForm onSwitchToSignup={() => setIsLogin(false)} />
+      ) : (
+        <RegisterForm onSwitchToLogin={() => setIsLogin(true)} />
+      )}
+
       <RegisterForm />
     </>
   );
