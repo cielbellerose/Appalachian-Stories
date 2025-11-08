@@ -3,7 +3,7 @@ itself. It's also passed an Onclick to handle opening and closing the picture th
 attatched to it
 */
 export default function MapImageDot({X,Y,onClick,url,myID,openID}) {
-    console.log(X,Y,url);
+    //console.log(X,Y,url);
     const dotStyle =  {
         postition:"Absolute",
         cx:X,

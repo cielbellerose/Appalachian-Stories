@@ -2,8 +2,6 @@
     position: relative;
 }
 
-
-
 .map img,.map svg {
     position: absolute;
     top: 0;
@@ -14,7 +12,27 @@
 
 .map img {
     z-index: auto;
-    
+}
+
+.PostForm {
+    position: sticky;
+    top: 3rem;
+    left: 70vw;
+    right: 1rem;
+    border-radius: 25px;
+    padding: 1rem;
+    width: 30rem;
+    height: auto;
+    z-index: 4;
+    border: 1px solid gray;
+    background-color: lightgrey;
+}
+
+#root {
+  margin: 0px;
+  padding: 0px;
+  min-height: 5083px;
+  width: 100vw;
 }
 
 svg path {
@@ -28,6 +46,8 @@ svg path {
     width: auto;
     border: 2px solid grey;
 }
+
+
 
 svg .Dot {
     r:4.5;

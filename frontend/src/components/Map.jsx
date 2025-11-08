@@ -3,12 +3,11 @@ import mappify from "../modules/mappify";
 import MapImageDot from "./MapImageDot";
 import { useRef, useEffect, useState } from "react";
 
-export default function Map({url}) {
+export default function Map({url,openPic,setOpenPic}) {
   const [mapDots,setMapDots] = useState([])
-  const [openPic, setOpenPic] = useState(() => 1);
   const mapImg = useRef(null);
   const trail = useRef(null);
-  console.log("Starting Map componant for url", url);
+  //console.log("Starting Map componant for url", url);
 
   let pictures = 1;
   //convert the data in the JSON to real things on the page
@@ -38,7 +37,7 @@ export default function Map({url}) {
 
   function onClickHandlerDots(ID){
     if (openPic === ID){
-      setOpenPic(0); //no pic is showing
+      setOpenPic(-1); //no pic is showing
     } else {
       setOpenPic(ID); 
     }
