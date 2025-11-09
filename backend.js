@@ -1,20 +1,20 @@
 import express from "express";
 import session from "express-session";
 import staticTestCoodinates from "./db/testData.json" with { type: "json" }; //this should be removed after db migration
-import cors from "cors";
-import loginRouter from "./routes/LoginRouter.js";
+import { formidable } from "formidable";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
+import LoginRouter from "./routes/LoginRouter.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-//This should be removed after db shifts from local
-//to prod
-//This is there to resolve issues with another server
-//requesting data from this one
-app.use(cors({ origin: true, credentials: true }));
 
 // Session configuration
 app.use(
@@ -29,27 +29,95 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      // secure: process.env.NODE_ENV === "production",
+      secure: false,
     },
-  }),
+  })
 );
 
-const date = new Date();
-console.log("server started");
-
-// app.use("/api", loginRouter);
+// const date = new Date();
+// console.log("server started");
+app.use(express.static("./frontend/dist"));
+app.use("/api", LoginRouter);
 
 //this route just returns static files test JSON data to not have to deal with
 //seting up data flows quite yet
-app.use("/api/test", (req, res) => {
-  console.log("Sending JSON test data", date.getMinutes(), date.getSeconds());
-  res.json({ staticTestCoodinates });
+// app.use("/api/test", (req, res) => {
+//   console.log("Sending JSON test data", date.getMinutes(), date.getSeconds());
+//   res.json({ staticTestCoodinates });
+// });
+
+app.get("/api/test", (req, res) => {
+  console.log("TEST ROUTE HIT!");
+  res.json({ message: "Backend is working!", staticTestCoodinates });
+});
+
+app.post("/api/upload", (req, res) => {
+  console.log("UPLOAD ROUTE HIT!");
+  try {
+    const form = formidable({
+      multiples: false,
+      keepExtensions: true,
+      uploadDir: path.join(__dirname, "user_data"),
+    });
+    form.parse(req, function (err, fields, files) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Upload failed" });
+      }
+      console.log("Files received:", files);
+
+      const file = files.photo[0];
+      if (!file) {
+        return res.status(400).json({ error: "No file uploaded" });
+      }
+      // fixes issue with spaces in files
+      const cleanFilename = file.originalFilename.replace(
+        /[^a-zA-Z0-9.-]/g,
+        "_"
+      );
+      const newPath = path.join(__dirname, "user_data", cleanFilename);
+
+      fs.rename(file.filepath, newPath, function (err) {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "File save failed" });
+        }
+        console.log("File saved successfully:", cleanFilename);
+        return res.json({
+          success: true,
+          message: "Successfully uploaded",
+          filename: cleanFilename,
+        });
+      });
+    });
+  } catch (error) {
+    console.error("Upload route error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 //routes to user pictures
 app.use("/user_data/", express.static("./user_data/"));
-app.use("/", express.static("./frontend/dist"));
+
+app.get("/api/photos", (req, res) => {
+  try {
+    const userDataPath = path.join(__dirname, "user_data");
+
+    fs.readdir(userDataPath, (err, files) => {
+      if (err) {
+        console.error("Error reading user_data directory:", err);
+        return res.status(500).json({ error: "Could not read photos" });
+      }
+
+      console.log("Found photos:", files);
+      res.json({ photos: files });
+    });
+  } catch (error) {
+    console.error("Photos endpoint error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

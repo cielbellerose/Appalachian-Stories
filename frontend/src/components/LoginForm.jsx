@@ -13,6 +13,8 @@ export default function LoginForm({ onSignupSelection }) {
     event.preventDefault();
     setLoading(true);
     try {
+      console.log("Sending login request to:", "/api/login");
+
       const response = await fetch("/api/login", {
         method: "POST",
         headers: {
@@ -21,6 +23,17 @@ export default function LoginForm({ onSignupSelection }) {
         credentials: "include",
         body: JSON.stringify({ username, password }),
       });
+
+      console.log("Response status:", response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Server error:", errorData);
+        toast.error(errorData.error || "Login failed");
+        setLoading(false);
+        return;
+      }
+
       const data = await response.json();
       if (!response.ok) {
         toast.error(data.error || "Login failed");

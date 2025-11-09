@@ -33,9 +33,10 @@ export default function UploadPhotostModal({ onPhotoUploaded }) {
 
     try {
       // this is giving issues
-      const response = await fetch("http://localhost:3000/api/upload", {
+      const response = await fetch("/api/upload", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
       console.log("Response received:", response.status);
       const text = await response.text();
