@@ -35,3 +35,7 @@ app.use("/api/test",(req,res) => {
   res.json({staticTestCoodinates,});
 });
 
+app.post("/api/posts",(req,res) => {
+  console.log(req.body);
+  res.sendStatus(200);
+});

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ToggleButton from 'react-bootstrap/ToggleButton';
+import Server from "../modules/ServerConnector"
 
 // https://react-bootstrap.netlify.app/docs/components/modal/
 // Vertically centered modal
@@ -10,10 +11,35 @@ export default function PostMaker({openPic,setOpenPic}) {
   const [radioValue, setRadioValue] = useState("0");
   const [delayPictureSet,setDelayPictureSet] = useState(() => true);
   const [picturesSelected,setPicturesSelected] = useState({"start": -1,"end":-1});
+  const textField = useRef(null);
+  const user = "debug"; //TODO : UPDATE TO GET USER
   const radios = [
     { name: 'Start', value:"0"},
     { name: 'End', value:"1"},
   ];
+
+
+  function submit(){
+    const data = {
+        "text": textField.current.value || "",
+        "startPicID": picturesSelected.start,
+        "endPicID" : picturesSelected.end,
+        "user" : user
+    }
+    if (data.text == null){
+      showError("Not enough data")
+      return
+    }
+    if((data.endPicID == -1) || data.startPicID == -1){
+      showError("Select end and beginning Pictures");
+      return
+    }
+    Server.sendPostToServer(data,undefined);
+  }
+
+  function showError(Error){
+    console.e(Error);
+  }
 
 
 
@@ -53,13 +79,13 @@ export default function PostMaker({openPic,setOpenPic}) {
 
   return (
     <div className="PostForm">
-        <Form >
+        <Form action={submit} >
             <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlTextarea1"
             >
                 <Form.Label>Enter Post</Form.Label>
-                <Form.Control as="textarea" placeholder="Your adventure here..." rows={3} />
+                <Form.Control as="textarea" placeholder="Your adventure here..." rows={3} ref={textField} />
                 <ButtonGroup className="picture-toggles">
                     {radios.map((radio, idx) => (
                         <ToggleButton 
