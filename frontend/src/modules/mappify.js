@@ -28,14 +28,14 @@ mappify.calculatePercentage = (lon,lat) => {
     if (lat < (mappify.atStart[1] -1) || (lat >mappify.atEnd[1] + 1)){
         throw new Error("Latitude coordinates out of bounds");
     }
-    console.log("lon", lon);
-    console.log("lat", lat);
-    console.log("distance", mappify.atStart[0] - lon)
+    // console.log("lon", lon);
+    // console.log("lat", lat);
+    // console.log("distance", mappify.atStart[0] - lon)
     const lonP = (lon - mappify.atStart[0]) / mappify.totalLatLength;
     const latP = (lat - mappify.atStart[1]) / mappify.totalLonLength;
-    console.log(lonP,latP,(lonP + latP) /2);
+    // console.log(lonP,latP,(lonP + latP) /2);
 
-    return ((lon - mappify.atStart[0]) / mappify.totalCoordinateLength)
+    return  (lonP + latP )/ 2
 
 };
 
