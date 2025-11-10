@@ -63,18 +63,27 @@ export default function UploadPhotostModal({ onPhotoUploaded }) {
       <button className={styles.button} onClick={handleShow}>
         Upload Photos
       </button>
-      <Modal show={show} onHide={handleClose} animation={false}>
+      <Modal
+        contentClassName={styles.modal}
+        show={show}
+        onHide={handleClose}
+        animation={false}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Upload Photos</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className={styles.modalBody}>
           <input
             id="image-input"
             type="file"
             accept=".png,.jpg,.jpeg,.gif"
             onChange={handleFileChange}
+            className={styles.hiddenInput}
           />
-          {file && <p>Selected: {file.name}</p>}
+          <label htmlFor="image-input" className={styles.customButton}>
+            Choose File
+          </label>
+          {file && <p className={styles.selected}>Selected: {file.name}</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>

@@ -1,11 +1,19 @@
 import LoginForm from "../components/LoginForm";
 import TrailNavbar from "../components/NavBar";
 import RegisterForm from "../components/RegisterForm";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../css/LoginPage.module.css";
 
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
+
+  // this page doesn't scroll vertically
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
 
   return (
     <>
