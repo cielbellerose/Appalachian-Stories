@@ -12,6 +12,7 @@ export default function UploadPhotostModal({ onPhotoUploaded }) {
     setShow(false);
     setFile(null);
   };
+
   const handleShow = () => setShow(true);
 
   const handleFileChange = (e) => {
@@ -32,21 +33,20 @@ export default function UploadPhotostModal({ onPhotoUploaded }) {
     console.log("About to fetch...");
 
     try {
-      // this is giving issues
-      const response = await fetch("/api/upload", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
         credentials: "include",
       });
-      console.log("Response received:", response.status);
-      const text = await response.text();
+      console.log("Response received:", res.status);
+
+      const text = await res.text();
       console.log("Response text:", text);
 
       const data = JSON.parse(text);
-
-      if (response.ok) {
+      if (res.ok) {
         toast.success("Upload successful!");
-        onPhotoUploaded(data.filename); //send to parent
+        onPhotoUploaded(data.filename); // send to parent
         handleClose();
       } else {
         toast.error("Upload failed");
