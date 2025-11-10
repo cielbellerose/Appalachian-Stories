@@ -9,3 +9,11 @@
   flex-direction: column;
   gap: 15px;
 }
+
+.contentContainer {
+  background-image: url('../resources/hiking-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
