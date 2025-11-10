@@ -8,6 +8,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import TrailEditPage from "./pages/TrailEditPage.jsx";
 import PresentationPage from "./pages/PresentationPage.jsx";
 import "../index.css";
+import ViewPostPage from "./pages/ViewPostPage.jsx"
 const root = document.getElementById("root");
 
 //Adding a react DOM to handle routing
@@ -21,6 +22,7 @@ ReactDOM.createRoot(root).render(
         <Route path="/new" element={<NewPostsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/view" element={<PresentationPage />} />
+        <Route path="/viewPost" element={<ViewPostPage />} />
       </Routes>
     </StrictMode>
   </BrowserRouter>
