@@ -19,5 +19,17 @@ me.sendPostToServer = (postdata,setTrueWhenDone) => {
     })
 }
 
+me.getPostsForUser = async (username) => {
+    console.log("Connector getting posts for",username)
+    console.log("url","/api/posts?" + new URLSearchParams({"user":username}))
+    const res = await fetch(me.serverName + "/api/posts?" + new URLSearchParams({"user":username}));
+    if (!res.ok){
+        console.error("Failed to fetch posts");
+    }
+    const data = await res.json();
+    return data;
+}
+
+
 
 export default me;

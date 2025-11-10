@@ -32,17 +32,14 @@ function mongoPostConnector({
   }
 
 
-  me.getPosts = async ({ query = {} } = {}) => {
+  me.getPosts = async (userID) => {
+    console.log(userID)
     const { client, posts } = connectToPosts();
     try {
       const data = await posts
-        .find(query)
-        .limit(pageSize)
-        .skip(pageSize * page)
+        .find({"user" : userID})
+        .limit(50)
         .toArray();
-      if (me.debug) {
-        console.log("Fetched posts from MongoDB", data);
-      }
       return data;
     } catch (err) {
       console.error("Error fetching posts from MongoDB", err);
