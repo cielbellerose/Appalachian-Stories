@@ -10,7 +10,7 @@ import cors from "cors"
 import MongoConnector from "./db/mongoConnection.js"
 import exifr from 'exifr' // => exifr/dist/full.umd.cjs
 import mappify from "./frontend/src/modules/mappify.js";
-
+import mongoPicturesConnnector from "./db/mongoPicturesConnnector.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -101,7 +101,13 @@ app.post("/api/upload", (req, res) => {
 async function getEXIFdata(filename){
   let {latitude, longitude} = await exifr.gps(filename)
   let percentage = mappify.calculatePercentage(latitude,longitude);
-  console.log(percentage);
+  const data = {}
+  data.lat = latitude;
+  data.lon = longitude;
+  data.percent = percentage * 100;
+  data.url = filename;
+  console.log("storing photo", data);
+  mongoPicturesConnnector.addPicture(data);
   
 }
 
@@ -144,7 +150,6 @@ app.post("/api/posts", (req, res) => {
   console.log(req.body);
   const data = req.body;
   data.date = Date.now()
-  
   MongoConnector.addPost(data);
   res.sendStatus(200);
 });
