@@ -7,6 +7,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import LoginRouter from "./routes/LoginRouter.js";
 import cors from "cors"
+import MongoConnector from "./db/mongoConnection.js"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -130,5 +131,9 @@ app.use("/api/test", (req, res) => {
 
 app.post("/api/posts", (req, res) => {
   console.log(req.body);
+  const data = req.body;
+  data.date = Date.now()
+  
+  MongoConnector.addPost(data);
   res.sendStatus(200);
 });
