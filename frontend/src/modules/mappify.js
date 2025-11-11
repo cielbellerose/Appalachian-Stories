@@ -22,11 +22,11 @@ for now lon is probably sufficient
 mappify.calculatePercentage = (lon, lat) => {
   //error check that these are apart of the correct trail
   if (lon < mappify.atStart[0] - 1 || lon > mappify.atEnd[0] + 1) {
-    throw new Error("Logitude coordinates out of bounds");
+    return -1;
   }
 
   if (lat < mappify.atStart[1] - 1 || lat > mappify.atEnd[1] + 1) {
-    throw new Error("Latitude coordinates out of bounds");
+    return -1;
   }
   // console.log("lon", lon);
   // console.log("lat", lat);
