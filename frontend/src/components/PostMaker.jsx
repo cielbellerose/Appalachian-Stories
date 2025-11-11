@@ -1,25 +1,36 @@
 import { useEffect, useState, useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import ToggleButton from 'react-bootstrap/ToggleButton';
-import Server from "../modules/ServerConnector"
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import ToggleButton from "react-bootstrap/ToggleButton";
+import Server from "../modules/ServerConnector";
 
 // https://react-bootstrap.netlify.app/docs/components/modal/
 // Vertically centered modal
+<<<<<<< HEAD
 export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,PrevData}) {
   const [radioValue, setRadioValue] = useState("0");
   const [delayPictureSet,setDelayPictureSet] = useState(() => true);
   const [picturesSelected,setPicturesSelected] = useState({"start": -1,"end":-1});
   const [recordedPercent,setRecordedPercent] = useState({start: -1,end:-1})
+=======
+export default function PostMaker({ openPic, setOpenPic }) {
+  const [radioValue, setRadioValue] = useState("0");
+  const [delayPictureSet, setDelayPictureSet] = useState(() => true);
+  const [picturesSelected, setPicturesSelected] = useState({
+    start: -1,
+    end: -1,
+  });
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854
   const textField = useRef(null);
   const title = useRef(null);
   const user = "debug"; //TODO : UPDATE TO GET USER
   const radios = [
-    { name: 'Start', value:"0"},
-    { name: 'End', value:"1"},
+    { name: "Start", value: "0" },
+    { name: "End", value: "1" },
   ];
 
+<<<<<<< HEAD
 
   useEffect(() => {
     if (radioValue === "0") {
@@ -49,9 +60,24 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
       return
     }
     if((data.Percent1 == -1) || data.Percent2 == -1){
-      showError("Select end and beginning Pictures");
-      return
+=======
+  function submit() {
+    const data = {
+      text: textField.current.value || "",
+      startPicID: picturesSelected.start,
+      endPicID: picturesSelected.end,
+      user: user,
+    };
+    if (data.text == null) {
+      showError("Not enough data");
+      return;
     }
+    if (data.endPicID == -1 || data.startPicID == -1) {
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854
+      showError("Select end and beginning Pictures");
+      return;
+    }
+<<<<<<< HEAD
 
     //decide if we're updating a post or creating a new one
     if (PrevData){
@@ -64,16 +90,22 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
 
   function showError(Error){
     console.error(Error);
+=======
+    Server.sendPostToServer(data, undefined);
   }
 
+  function showError(Error) {
+    console.e(Error);
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854
+  }
 
-
-    /* Handles putting displaying the new picture attatched to the selection*/
+  /* Handles putting displaying the new picture attatched to the selection*/
   useEffect(() => {
     setDelayPictureSet(true);
-    setOpenPic((radioValue === "0" ? picturesSelected.start : picturesSelected.end));
-  },[radioValue])
-
+    setOpenPic(
+      radioValue === "0" ? picturesSelected.start : picturesSelected.end
+    );
+  }, [radioValue]);
 
   //handle if there's previous data
   useEffect( () => {
@@ -90,9 +122,10 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
   useEffect(() => {
     //console.log(picturesSelected);
     if (delayPictureSet === true) {
-        setDelayPictureSet(false);
-        return
+      setDelayPictureSet(false);
+      return;
     }
+<<<<<<< HEAD
 
     setPicturesSelected((prev) => ((radioValue === "0") ?
         {...prev ,start:openPic} :
@@ -109,13 +142,31 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
     } 
     if (buttonName === "End"){
         return (picturesSelected.end === -1) ? 'outline-danger' : 'outline-success';
+=======
+    console.log("setting picture");
+    setPicturesSelected((prev) =>
+      radioValue === "0"
+        ? { ...prev, start: openPic }
+        : { ...prev, end: openPic }
+    );
+  }, [openPic]);
+
+  function getButtonStyleing(buttonName) {
+    if (buttonName === "Start") {
+      return picturesSelected.start === -1
+        ? "outline-danger"
+        : "outline-success";
+    }
+    if (buttonName === "End") {
+      return picturesSelected.end === -1 ? "outline-danger" : "outline-success";
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854
     }
     console.e("Error!");
   }
 
-
   return (
     <div className="PostForm">
+<<<<<<< HEAD
         <Form action={submit} >
             <Form.Group
                 className="mb-3"
@@ -142,6 +193,38 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
                 <Button className="submit-button" type="submit">Post</Button>
             </Form.Group>
         </Form>
+=======
+      <Form action={submit}>
+        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+          <Form.Label>Enter Post</Form.Label>
+          <Form.Control
+            as="textarea"
+            placeholder="Your adventure here..."
+            rows={3}
+            ref={textField}
+          />
+          <ButtonGroup className="picture-toggles">
+            {radios.map((radio, idx) => (
+              <ToggleButton
+                key={idx}
+                id={`radio-${idx}`}
+                type="radio"
+                variant={getButtonStyleing(radio.name)}
+                name="radio"
+                value={radio.value}
+                checked={radioValue === radio.value}
+                onChange={(e) => setRadioValue(e.currentTarget.value)}
+              >
+                {radio.name}
+              </ToggleButton>
+            ))}
+          </ButtonGroup>
+          <Button className="submit-button" type="submit">
+            Post
+          </Button>
+        </Form.Group>
+      </Form>
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854
     </div>
   );
 }

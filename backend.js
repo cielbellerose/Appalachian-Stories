@@ -44,7 +44,7 @@ app.use(
       // secure: process.env.NODE_ENV === "production",
       secure: false,
     },
-  }),
+  })
 );
 
 app.use(express.static("./frontend/dist"));

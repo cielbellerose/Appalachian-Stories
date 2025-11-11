@@ -16,6 +16,8 @@ CS5610 Project 3
 
 ## Screenshots
 Login Page
+<img width="1230" height="763" alt="Screenshot 2025-11-10 at 10 35 10 AM" src="https://github.com/user-attachments/assets/e2a6aac5-e8e5-498e-bb97-1f7660b66926" />
+
 
 Trail Edit Page
 
@@ -41,7 +43,7 @@ Presentation Page
 
 
 ## Slides
-
+https://docs.google.com/presentation/d/1bPgIZJ2jjjCDyiSkk37zimRKcq-IsBCQ0VkTQkHWCtw/edit?usp=sharing
 
 ## 📜 License  
 This project is licensed under the **MIT License**.  

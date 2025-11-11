@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import AddPostModal from "../components/AddPostModal";
 import TrailNavbar from "../components/NavBar";
 import UploadPhotostModal from "../components/UploadPhotosModal";
 
@@ -29,9 +28,8 @@ export default function TrailEditPage() {
   return (
     <>
       <TrailNavbar />
-      <h1>Trail Edit Page</h1>
+      <h1>Edit</h1>
       <div className="contentContainer">
-        <AddPostModal />
         <UploadPhotostModal onPhotoUploaded={handlePhotoUploaded} />
         {photos.map((photo, index) => (
           <div key={index} style={{ margin: "10px" }}>

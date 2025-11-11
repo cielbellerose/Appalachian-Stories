@@ -1,4 +1,4 @@
-const me = {}
+const me = {};
 
 me.serverName = "http://localhost:3000"; //TODO replace server name
 me.sendPostsSuffix = "/api/posts";
@@ -11,18 +11,19 @@ me.deletePosts =  me.serverName + me.deletePostsSuffix
 /* Allows sending a post update. Takes JSON postdata, as well as an optional
 react hook to indicate when done.
 */
-me.sendPostToServer = (postdata,setTrueWhenDone) => {
-    fetch(me.toPosts, {
-        method: 'POST',
-        headers: { "Content-Type" : "application/json"},
-        body: JSON.stringify(postdata)
-    }).then({
-        if (setTrueWhenDone){
-            setTrueWhenDone(true);
-        }
-    })
-}
+me.sendPostToServer = (postdata, setTrueWhenDone) => {
+  fetch(me.toPosts, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(postdata),
+  }).then({
+    if(setTrueWhenDone) {
+      setTrueWhenDone(true);
+    },
+  });
+};
 
+<<<<<<< HEAD
 me.getPostsForUser = async (username) => {
     // console.log("Connector getting posts for",username)
     // console.log("url","/api/posts?" + new URLSearchParams({"user":username}))
@@ -57,3 +58,6 @@ me.deletePost = (id) => {
 
 
 export default me;
+=======
+export default me;
+>>>>>>> ba205f0f5ff690d3ab82693608ee8db1ccb56854

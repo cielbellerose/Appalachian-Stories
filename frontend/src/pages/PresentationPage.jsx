@@ -20,6 +20,13 @@ export default function PresentationPage() {
       <Map url={url} percent={percent} setCurrentPercent={setCurrentPercent} openPic={openPic} setOpenPic={setOpenPic}/>
 
       <div className="contentContainer"></div>
+      <Map
+        url="http://localhost:3000/api/test"
+        openPic={openPic}
+        setOpenPic={(v) => {
+          setOpenPic(v);
+        }}
+      />
     </>
   );
 }

@@ -15,18 +15,20 @@ export default function Map({url,openPic,setOpenPic,currentPercent,setCurrentPer
     const convertertedCooodinates = json.map((data) => {
       const onMap = {};
       const length = trail.current.getTotalLength();
-      const point = trail.current.getPointAtLength(length * (data.percent / 100));
+      const point = trail.current.getPointAtLength(
+        length * (data.percent / 100)
+      );
       onMap.X = point.x;
       onMap.Y = point.y;
       onMap.ID = data._id;
       onMap.url = data.url;
       onMap.percent = data.percent;
       return onMap;
-    })    
+    });
     // console.log(convertertedCooodinates);
     setMapDots(convertertedCooodinates);
     //console.log(json.staticTestCoodinates)
-  }
+  };
   //getAPIitems from URL
   useEffect(() => {
     fetch(url)
@@ -45,12 +47,12 @@ export default function Map({url,openPic,setOpenPic,currentPercent,setCurrentPer
     }
   }
 
-  const scale = .908
+  const scale = 0.908;
   return (
     //709.549 3355.049"
     <div className="map">
-      <img ref={mapImg}  src={map}></img> 
-      <svg  viewBox={`0 0 ${700.549 * scale} ${3652.86 * scale}`}>
+      <img ref={mapImg} src={map}></img>
+      <svg viewBox={`0 0 ${700.549 * scale} ${3652.86 * scale}`}>
         {/* <MapImageDot ID={1} X={200} Y={20} onClick={()=>{}}/> */}
         {mapDots.map((dot) => <MapImageDot openID={openPic} myID={dot.ID} key={dot.ID} X={dot.X} Y={dot.Y} url={dot.url} onClick={() => onClickHandlerDots(dot.ID,dot.percent)}/>)}
         <path

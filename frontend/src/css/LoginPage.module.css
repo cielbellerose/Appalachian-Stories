@@ -1,3 +1,13 @@
+.contentContainer {
+  background-image: url("../resources/hiking-background.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
 .container {
   max-width: 400px;
   margin: 50px auto;
@@ -8,14 +18,4 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.contentContainer {
-  background-image: url('../resources/hiking-background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
 }

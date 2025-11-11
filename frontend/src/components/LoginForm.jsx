@@ -7,7 +7,8 @@ export default function LoginForm({ onSignupSelection }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // For changing page after login
+
+  const navigate = useNavigate(); // for switching page after login
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
@@ -15,7 +16,7 @@ export default function LoginForm({ onSignupSelection }) {
     try {
       console.log("Sending login request to:", "/api/login");
 
-      const response = await fetch("/api/login", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -24,25 +25,25 @@ export default function LoginForm({ onSignupSelection }) {
         body: JSON.stringify({ username, password }),
       });
 
-      console.log("Response status:", response.status);
+      console.log("Response status:", res.status);
 
-      if (!response.ok) {
-        const errorData = await response.json();
+      if (!res.ok) {
+        const errorData = await res.json();
         console.error("Server error:", errorData);
         toast.error(errorData.error || "Login failed");
         setLoading(false);
         return;
       }
 
-      const data = await response.json();
-      if (!response.ok) {
+      const data = await res.json();
+      if (!res.ok) {
         toast.error(data.error || "Login failed");
         setLoading(false);
         return;
       }
       toast.success("Login successful!");
       console.log("Login successful", data);
-      navigate("/"); // Bring to edit trail landing page after successful login
+      navigate("/"); // switch to edit trail page after successful login
     } catch (error) {
       toast.error("Error logging in");
       console.error("Login error:", error);
@@ -54,7 +55,6 @@ export default function LoginForm({ onSignupSelection }) {
     <>
       <div className={styles.formContainer}>
         <h2 className={styles.title}>Login</h2>
-
         <form className={styles.form} onSubmit={handleSubmitForm}>
           <input
             type="text"
@@ -76,7 +76,6 @@ export default function LoginForm({ onSignupSelection }) {
             value={loading ? "Loading" : "Login"}
           />
         </form>
-
         <div>
           <button className={styles.switchButton} onClick={onSignupSelection}>
             Sign Up
