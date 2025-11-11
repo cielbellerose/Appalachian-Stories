@@ -24,9 +24,10 @@ export default function PostMaker({
     start: -1,
     end: -1,
   });
+  const [user,setUser] = useState("debug");
   const textField = useRef(null);
   const title = useRef(null);
-  const user = await user.getCurrentUser();
+  useEffect(() => {setUser(user.getCurrentUser())},[]);
   const radios = [
     { name: "Start", value: "0" },
     { name: "End", value: "1" },
