@@ -1,13 +1,16 @@
 import { MongoClient, ObjectId } from "mongodb";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 function mongoPostConnector({
-  dbName = "Social-hiking",
+  dbName = "hiking-stories",
   collection_name = "user-posts",
   defaultUri = "mongodb://localhost:27017",
 } = {}) {
   const me = {};
   me.debug = false;
   const URI = process.env.MONGODB_URI || defaultUri;
+  console.log(URI);
 
   const connectToPosts = () => {
     const client = new MongoClient(URI);

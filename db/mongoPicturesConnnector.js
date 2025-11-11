@@ -1,15 +1,17 @@
 import { debug } from "console";
 import { MongoClient, ObjectId } from "mongodb";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 function mongoPictureConnector({
-  dbName = "Social-hiking",
+  dbName = "hiking-stories",
   collection_name = "user-pictures",
   defaultUri = "mongodb://localhost:27017",
 } = {}) {
   const me = {};
   me.debug = false;
   const URI = process.env.MONGODB_URI || defaultUri;
-
+  //console.log("DEBUG URI",URI); //chec
   const connect = () => {
     const client = new MongoClient(URI);
     const posts = client.db(dbName).collection(collection_name);
@@ -18,6 +20,7 @@ function mongoPictureConnector({
 
 
   me.addPicture = async (pictureData) => {
+    console.log("++Adding Picture to",URI);
     const { client, posts } = connect();
     try {
       console.log(pictureData);
@@ -38,6 +41,12 @@ function mongoPictureConnector({
     // percent1 = 0;
     percent2 = parseFloat(percent2);
     percent1 = parseFloat(percent1);
+    if (percent1 >= percent2){
+      percent1++, percent2--;
+    } else {
+      percent2++, percent1--;
+    }
+    console.log(percent1,percent2);
     const query = (percent1 <= percent2) ? {$and:[{"percent":{$gte:parseInt(percent1)}},{"percent":{$lte:parseInt(percent2)}},{"user":userID}]}
             : {$and:[{"percent":{$gte:parseInt(percent2)}},{"percent":{$lte:parseInt(percent1)}},{"user":userID}]};
 
