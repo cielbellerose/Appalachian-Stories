@@ -161,15 +161,11 @@ app.get("/api/posts", (req, res) => {
   const {user} = req.query;
   
   MongoConnector.getPosts(user).then((d) => res.json({d,}));
-  // console.log(data);
-  // MongoConnector.addPost(data);
-  // res.sendStatus(200);
 });
 
 app.get("/api/pic", async (req, res) => {
-  console.log("Pic req");
   const {user,p1,p2} = req.query;
+  console.log(user,p1,p2);
   const data = await mongoPicturesConnnector.getPicturesForPosts(user,p1,p2);
-  //const json =  data.json();
   res.json(data);
 });

@@ -1,3 +1,4 @@
+import { debug } from "console";
 import { MongoClient, ObjectId } from "mongodb";
 
 function mongoPictureConnector({
@@ -34,6 +35,9 @@ function mongoPictureConnector({
   /* These are lable percent1 and 2 because we don't controll which is which. We just take the larger.
   This returns all the data we need for the new post*/
   me.getPicturesForPosts = async (userID,percent1,percent2) => {
+    // percent1 = 0;
+    percent2 = parseFloat(percent2);
+    percent1 = parseFloat(percent1);
     const query = (percent1 <= percent2) ? {$and:[{"percent":{$gte:parseInt(percent1)}},{"percent":{$lte:parseInt(percent2)}},{"user":userID}]}
             : {$and:[{"percent":{$gte:parseInt(percent2)}},{"percent":{$lte:parseInt(percent1)}},{"user":userID}]};
 
