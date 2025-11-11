@@ -5,6 +5,7 @@ import { getDB } from "../db/connection.js";
 const LoginRouter = express.Router();
 
 LoginRouter.post("/login", async (req, res) => {
+  console.log('hit api/signup')
   try {
     const { username, password } = req.body;
 
@@ -44,6 +45,7 @@ LoginRouter.post("/login", async (req, res) => {
 });
 
 LoginRouter.post("/signup", async (req, res) => {
+  console.log('hit api/signup')
   try {
     const { username, password } = req.body;
 
@@ -94,6 +96,7 @@ LoginRouter.post("/signup", async (req, res) => {
 });
 
 LoginRouter.get("/current_user", (req, res) => {
+  console.log('hit api/current_user')
   const username = req.session.username;
 
   if (username) {
@@ -104,6 +107,7 @@ LoginRouter.get("/current_user", (req, res) => {
 });
 
 LoginRouter.post("/logout", (req, res) => {
+  console.log('hit api/logout')
   req.session.destroy((error) => {
     if (error) {
       return res.status(500).json({
@@ -119,6 +123,7 @@ LoginRouter.post("/logout", (req, res) => {
 });
 
 LoginRouter.put("/update-profile", async (req, res) => {
+  console.log('hit api/update_profile')
   const currentName = req.session.username;
   console.log("currentName", currentName);
   if (!currentName) {
@@ -171,6 +176,7 @@ LoginRouter.put("/update-profile", async (req, res) => {
 });
 
 LoginRouter.delete("/delete-profile", async (req, res) => {
+  console.log('hit api/delete-profile')
   const currentName = req.session.username;
   if (!currentName) {
     return res.status(401).json({ error: "User not logged in" });
