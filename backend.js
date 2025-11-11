@@ -45,9 +45,6 @@ app.use(
     },
   }),
 );
-
-
-app.use(express.static("./frontend/dist"));
 app.use("/api", LoginRouter);
 
 app.post("/api/upload", (req, res) => {
@@ -179,9 +176,13 @@ app.get("/api/pic", async (req, res) => {
   res.json(data);
 });
 
-app.use((req, res) => {
+app.use(express.static("./frontend/dist"));
+
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
