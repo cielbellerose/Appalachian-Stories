@@ -43,21 +43,18 @@ app.use(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
     },
-  })
+  }),
 );
 
 app.use(express.static("./frontend/dist"));
 app.use("/api", LoginRouter);
 
-//this route just returns static files test JSON data to not have to deal with
-//seting up data flows quite yet
-// app.use("/api/test", (req, res) => {
-//   console.log("Sending JSON test data", date.getMinutes(), date.getSeconds());
-//   res.json({ staticTestCoodinates });
-// });
-
 app.post("/api/upload", (req, res) => {
   console.log("UPLOAD ROUTE HIT!");
+  const username = req.session?.username || req.user?.username;
+  if (!username) {
+    return res.status(401).json({ error: "Not logged in" });
+  }
   try {
     const form = formidable({
       multiples: false,
@@ -78,7 +75,7 @@ app.post("/api/upload", (req, res) => {
       // fixes issue with spaces in files
       const cleanFilename = file.originalFilename.replace(
         /[^a-zA-Z0-9.-]/g,
-        "_"
+        "_",
       );
       const newPath = path.join(__dirname, "user_data", cleanFilename);
 
@@ -88,7 +85,7 @@ app.post("/api/upload", (req, res) => {
           return res.status(500).json({ error: "File save failed" });
         }
         console.log("File saved successfully:", cleanFilename);
-        getEXIFdata(newPath, cleanFilename);
+        getEXIFdata(newPath, cleanFilename, username);
         return res.json({
           success: true,
           message: "Successfully uploaded",
@@ -102,7 +99,7 @@ app.post("/api/upload", (req, res) => {
   }
 });
 
-async function getEXIFdata(path, filename) {
+async function getEXIFdata(path, filename, username) {
   let { latitude, longitude } = await exifr.gps(path);
   let percentage = mappify.calculatePercentage(latitude, longitude);
   const data = {};
@@ -110,7 +107,7 @@ async function getEXIFdata(path, filename) {
   data.lon = longitude;
   data.percent = percentage * 100;
   data.url = baseURL + "/user_data/" + filename;
-  data.user = "debug"; //TODO add in getting actual username here
+  data.user = username;
   console.log("storing photo", data);
   mongoPicturesConnnector.addPicture(data);
 }
