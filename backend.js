@@ -86,9 +86,9 @@ app.use("/api", LoginRouter);
 app.post("/api/upload", (req, res) => {
   console.log("UPLOAD ROUTE HIT!");
   const username = req.session?.username || req.user?.username;
-  if (!username) {
-    return res.status(401).json({ error: "Not logged in" });
-  }
+  // if (!username) {
+  //   return res.status(401).json({ error: "Not logged in" });
+  // }
   try {
     const form = formidable({
       multiples: false,
