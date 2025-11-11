@@ -5,6 +5,6 @@
 
 
 [[headers]]
-for = "/*"
+for = "https://hiking-photos-66kz.onrender.com/"
 [headers.values]
-Access-Control-Allow-Origin = "https://hiking-photos-66kz.onrender.com/"
+Access-Control-Allow-Origin = "*"
