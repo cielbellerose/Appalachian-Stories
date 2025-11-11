@@ -62,7 +62,6 @@ LoginRouter.post("/signup", async (req, res) => {
     }
 
     const db = await connectDB();
-    console.log(db);
     const usersCollection = db.collection("users");
 
     // is the username already in the database?
