@@ -57,12 +57,9 @@ export default function PostMaker({openPic,setOpenPic,percent,setCurrentPercent,
     if (PrevData){
       data._id = PrevData._id;
       Server.updatePost(data);
-
-
     } else {
       Server.sendPostToServer(data,undefined);
     }
-    
   }
 
   function showError(Error){
