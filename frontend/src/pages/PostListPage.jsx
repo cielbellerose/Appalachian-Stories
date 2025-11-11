@@ -14,7 +14,7 @@ export default function PostListPage() {
     const currentUser = await userModule.getCurrentUser();
     ServerConnector.getPostsForUser(currentUser).then((d) => setPosts(d.d));
     setReloadNeeded(false);
-  }, [reload, user]);
+  }, [reload]);
 
   function makePost(post) {
     //console.log(posts)
@@ -24,7 +24,6 @@ export default function PostListPage() {
     }
   }
 
-  console.log(user);
   return (
     <>
       <TrailNavbar />
