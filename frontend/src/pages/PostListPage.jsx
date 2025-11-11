@@ -27,7 +27,9 @@ export default function PostListPage() {
   return (
     <>
       <TrailNavbar />
-      {posts.map((post) => makePost(post))}
+      <div className="posts-container">
+        {posts.map((post) => makePost(post))}
+      </div>
     </>
   );
 }

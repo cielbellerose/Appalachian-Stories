@@ -4,6 +4,7 @@ import Form from "react-bootstrap/Form";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Server from "../modules/ServerConnector";
+import user from "../modules/user";
 
 // https://react-bootstrap.netlify.app/docs/components/modal/
 // Vertically centered modal
@@ -26,7 +27,17 @@ export default function PostMaker({
   });
   const textField = useRef(null);
   const title = useRef(null);
-  const user = await user.getCurrentUser();
+
+  // if you need the user use the currentUser var
+  const [currentUser, setUser] = useState(null);
+  useEffect(() => {
+    async function fetchUser() {
+      const userData = await user.getCurrentUser();
+      setUser(userData);
+    }
+    fetchUser();
+  }, []);
+
   const radios = [
     { name: "Start", value: "0" },
     { name: "End", value: "1" },

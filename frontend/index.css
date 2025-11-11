@@ -87,6 +87,11 @@ svg .Dot {
   color: "red";
   transform: translate(-36px, -20px);
   z-index: 2;
+  transition: r 0.2s ease;
+}
+
+svg .Dot:hover {
+  r: 6;
 }
 
 .map svg foreignObject {
@@ -116,4 +121,11 @@ svg .Dot {
 
 .post-delete {
   margin-right: 0.5rem;
+}
+
+.posts-container {
+  padding: 10px;
+  background-color: lightgrey;
+  font-size: 2rem;
+  border: 2px solid white;
 }
