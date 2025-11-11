@@ -1,6 +1,6 @@
 const me = {};
 
-me.serverName = "https://hiking-photos-66kz.onrender.com"; //TODO replace server name
+me.serverName = "https://hiking-photos-66kz.onrender.com";
 me.sendPostsSuffix = "/api/posts";
 me.updatePostsSuffix = "/api/updatePost";
 me.deletePostsSuffix = "/api/posts/delete";
@@ -16,6 +16,7 @@ me.sendPostToServer = (postdata, setTrueWhenDone) => {
   fetch(me.toPosts, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(postdata),
   }).then({
     if(setTrueWhenDone) {
@@ -28,7 +29,9 @@ me.getPostsForUser = async (username) => {
   // console.log("Connector getting posts for",username)
   // console.log("url","/api/posts?" + new URLSearchParams({"user":username}))
   const res = await fetch(
-    me.serverName + "/api/posts?" + new URLSearchParams({ user: username })
+    me.serverName + "/api/posts?" + new URLSearchParams({ user: username }),    {
+      credentials: "include",
+    }
   );
   if (!res.ok) {
     console.error("Failed to fetch posts");
@@ -49,6 +52,7 @@ me.updatePost = (postdata) => {
   fetch(me.updatePosts, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(postdata),
   });
 };
@@ -57,6 +61,7 @@ me.deletePost = (id) => {
   fetch(me.deletePosts, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(data),
   });
 };

@@ -1,9 +1,12 @@
+import Server from "./ServerConnector.js"
+
+
 const user = {};
 
 user.getCurrentUser = async () => {
   try {
     console.log("entered try of get current user...")
-    const response = await fetch("/api/current_user", {
+    const response = await fetch(Server.serverName + "/api/current_user", {
       credentials: "include",
     });
     if (response.ok) {

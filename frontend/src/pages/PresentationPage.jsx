@@ -31,7 +31,7 @@ export default function PresentationPage() {
 
       <div className="contentContainer"></div>
       <Map
-        url="http://localhost:3000/api/test"
+        url={ServerConnector.serverName + "/api/test"}
         openPic={openPic}
         setOpenPic={(v) => {
           setOpenPic(v);

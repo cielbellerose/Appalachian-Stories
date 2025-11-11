@@ -5,7 +5,6 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import LoginRouter from "./routes/LoginRouter.js";
- import cors from "cors";
 import MongoConnector from "./db/mongoConnection.js";
 import exifr from "exifr"; // => exifr/dist/full.umd.cjs
 import mappify from "./frontend/src/modules/mappify.js";
@@ -27,12 +26,16 @@ const baseURL = process.env.BASE_URL || "http://localhost:3000";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'https://rad-daifuku-c4aece.netlify.app'); // or a specific domain
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type',"Authorization");
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+
   next();
 });
 
@@ -44,16 +47,17 @@ app.use(
     saveUninitialized: false,
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
-      collectionName: "users",
+      collectionName: "sessions",
     }),
     cookie: {
       maxAge: 1000 * 60 * 60 * 24, // 1 day
       httpOnly: true,
-      secure: true,
-      sameSite: "none" 
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
     },
   }),
 );
+
 app.use("/api", LoginRouter);
 
 app.post("/api/upload", (req, res) => {

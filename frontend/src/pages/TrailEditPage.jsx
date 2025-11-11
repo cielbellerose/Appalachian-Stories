@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import TrailNavbar from "../components/Navbar";
 import UploadPhotostModal from "../components/UploadPhotosModal";
+import ServerConnector from "../modules/ServerConnector.js";
 
 export default function TrailEditPage() {
   const [photos, setPhotos] = useState([]);
@@ -9,7 +10,7 @@ export default function TrailEditPage() {
   useEffect(() => {
     async function loadPhotos() {
       try {
-        const response = await fetch("/api/photos");
+        const response = await fetch(ServerConnector.serverName + "/api/photos", {credentials: "include"});
         if (response.ok) {
           const data = await response.json();
           setPhotos(data.photos);
@@ -34,7 +35,7 @@ export default function TrailEditPage() {
         {photos.map((photo, index) => (
           <div key={index} style={{ margin: "10px" }}>
             <img
-              src={`http://localhost:3000/user_data/${photo}`}
+              src={`${ServerConnector.serverName}/user_data/${photo}`}
               alt={`Upload ${index + 1}`}
               width="300"
               onError={(e) => {

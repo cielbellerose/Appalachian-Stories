@@ -2,21 +2,40 @@ import { useEffect, useState } from "react";
 import Map from "../components/Map.jsx";
 import PostMaker from "../components/PostMaker.jsx";
 import ServerConnector from "../modules/ServerConnector.js";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import TrailNavbar from "../components/Navbar.jsx";
+import userModule from "../modules/user.js";
 
 export default function NewPostsPage() {
   const [openPic, setOpenPic] = useState(() => -1);
   const [percent, setCurrentPercent] = useState(-1);
-  const user = "debug"; //TODO integrate real user
-  const url = ServerConnector.getURLforMap(user, 0, 100); //format the query appropriately
+  const [user, setUser] = useState(null);
   const location = useLocation();
-  // console.log("data",location.state);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function checkUser() {
+      const currentUser = await userModule.getCurrentUser();
+      if (!currentUser) {
+        navigate("/login"); // if not logged in, go to login
+      } else {
+        setUser(currentUser);
+      }
+    }
+    checkUser();
+  }, [navigate]);
+
   useEffect(() => {
     if (location.state !== null) {
       setOpenPic(location.state.start); //setup right open pic
     }
   }, []);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  const url = ServerConnector.getURLforMap(user, 0, 100); //format the query appropriately
 
   return (
     <>

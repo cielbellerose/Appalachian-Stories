@@ -13,7 +13,7 @@ export default function PostListPage() {
   useEffect(() => {
     ServerConnector.getPostsForUser(user).then((d) => setPosts(d.d));
     setReloadNeeded(false);
-  }, [reload]);
+  }, [reload, user]);
 
   function makePost(post) {
     //console.log(posts)

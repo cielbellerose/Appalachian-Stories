@@ -17,7 +17,7 @@ LoginRouter.post("/login", async (req, res) => {
 
     const db = await connectDB();
     const usersCollection = db.collection("users");
-    const user = await usersCollection.findOne({ username });
+    const user = await usersCollection.findOne({ username: username.toLowerCase() });
 
     if (!user) {
       return res.status(400).json({ error: "User not found" });
@@ -30,14 +30,23 @@ LoginRouter.post("/login", async (req, res) => {
     }
 
     req.session.userId = user._id.toString();
-
     console.log("Successfully logged in");
     req.session.username = user.username;
-    res.json({
-      success: true,
-      username: user,
-      message: "Login successful",
-    });
+
+    // save session data
+
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).json({ error: "Session save failed" });
+      }
+      
+      res.json({
+        success: true,
+        username: user.username,  // ✅ Fixed
+        message: "Login successful",
+      });
+  });
   } catch (error) {
     console.error("Failed to log in", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -76,7 +85,7 @@ LoginRouter.post("/signup", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = {
-      username,
+      username: username.toLowerCase(),
       password: hashedPassword,
     };
 
@@ -85,11 +94,17 @@ LoginRouter.post("/signup", async (req, res) => {
 
     console.log("User created successfully", user);
     req.session.username = user.username;
+    req.session.save((err) => {
+    if (err) {
+      return res.status(500).json({ error: "Session save failed" });
+    }
+    
     res.json({
       success: true,
       message: "User created successfully",
       user: { username: user.username }
     });
+  });
   } catch (error) {
     console.error("Failed to create user:", error);
     res.status(500).json({ error: "Internal Server Error" });
@@ -127,6 +142,7 @@ LoginRouter.put("/update-profile", async (req, res) => {
   console.log('hit api/update_profile')
   const currentName = req.session.username;
   console.log("currentName", currentName);
+
   if (!currentName) {
     return res.status(401).json({ error: "User not logged in" });
   }
@@ -150,13 +166,13 @@ LoginRouter.put("/update-profile", async (req, res) => {
     if (!currentUser) {
       return res.status(404).json({ error: "Logged in user not found" });
     }
-    if (username && username !== currentName) {
-      const existingUser = await usersCollection.findOne({ username });
+    if (username && username.toLowerCase() !== currentName) {
+      const existingUser = await usersCollection.findOne({ username: username.toLowerCase() });
       if (existingUser) {
         return res.status(400).json({ error: "Username already exists" });
       } else {
-        currentUser.username = username;
-        req.session.username = username;
+        currentUser.username = username.toLowerCase();
+        req.session.username = username.toLowerCase();
       }
     }
     if (password) {
@@ -168,7 +184,7 @@ LoginRouter.put("/update-profile", async (req, res) => {
     res.json({
       success: true,
       message: "Profile updated successfully",
-      username: username || currentName,
+      username: username ? username.toLowerCase() : currentName,
     });
   } catch (err) {
     console.error("Error updating user:", err);
@@ -186,15 +202,6 @@ LoginRouter.delete("/delete-profile", async (req, res) => {
     const db = await connectDB();
     const usersCollection = db.collection("users");
     await usersCollection.deleteOne({ username: currentName });
-    const deletedUser = await usersCollection.findOne({
-      display_name: currentName,
-    });
-    if (!deletedUser) {
-      return {
-        success: true,
-        message: "User deleted successfully",
-      };
-    }
     req.session.destroy((error) => {
       if (error) {
         return res.status(500).json({ error: "Failed to delete user" });
