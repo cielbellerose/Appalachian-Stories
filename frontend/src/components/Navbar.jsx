@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import EditProfileForm from "./EditProfileForm.jsx";
-import user from "./modules/user";
+import user from "../modules/user.js";
 
 function TrailNavbar() {
   const [username, setUsername] = useState("debug"); //TODO double check that current user is overriding

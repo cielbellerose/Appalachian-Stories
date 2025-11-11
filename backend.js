@@ -158,7 +158,7 @@ app.post("/api/updatePost", async (req, res) => {
     await mongoConnection.updatePost(id, data);
     res.sendStatus(200);
   } catch (error) {
-    console.error();
+    console.error("Error updating post", error);
   }
 });
 
@@ -168,7 +168,7 @@ app.post("/api/posts/delete", async (req, res) => {
     await mongoConnection.deletePost(req.body.id);
     res.sendStatus(200);
   } catch (error) {
-    console.error();
+    console.error("Error deleting post", error);
   }
 });
 
