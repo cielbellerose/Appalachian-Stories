@@ -26,7 +26,10 @@ const baseURL = process.env.BASE_URL || "http://localhost:3000";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors()); //for resovling cors issues
+app.use(cors({
+  origin: "https://rad-daifuku-c4aece.netlify.app/",
+  credentials: false}
+)); //for resovling cors issues
 
 // Session configuration
 app.use(
