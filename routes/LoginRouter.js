@@ -73,6 +73,7 @@ LoginRouter.post("/signup", async (req, res) => {
       return res.status(400).json({ error: "Username already taken" });
     }
 
+    console.log("username found not used");
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = {
