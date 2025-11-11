@@ -1,10 +1,12 @@
 const me = {}
 
-me.serverName = "http://localhost:3000";
+me.serverName = "http://localhost:3000"; //TODO replace server name
 me.sendPostsSuffix = "/api/posts";
 me.updatePostsSuffix = "/api/updatePost"
+me.deletePostsSuffix = "/api/posts/delete"
 me.toPosts = me.serverName + me.sendPostsSuffix;
 me.updatePosts = me.serverName + me.updatePostsSuffix;
+me.deletePosts =  me.serverName + me.deletePostsSuffix
 
 /* Allows sending a post update. Takes JSON postdata, as well as an optional
 react hook to indicate when done.
@@ -44,8 +46,13 @@ me.updatePost = (postdata) => {
         body: JSON.stringify(postdata)
     });
 }
-me.deletePost = () => {
-
+me.deletePost = (id) => {
+    const data = {"id":id};
+        fetch(me.deletePosts, {
+        method: 'POST',
+        headers: { "Content-Type" : "application/json"},
+        body: JSON.stringify(data)
+    });
 }
 
 

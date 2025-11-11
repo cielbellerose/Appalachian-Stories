@@ -9,12 +9,14 @@ import Post from "../components/post.jsx";
 
 export default function PostListPage() {
   const [posts, setPosts] = useState(() =>[]);
+  const [reload, setReloadNeeded] = useState(false);
   const { user } = useParams();
   
   useEffect(()=> {
     ServerConnector.getPostsForUser(user)
-    .then((d) => setPosts(d.d))}
-  ,[])
+    .then((d) => setPosts(d.d));
+    setReloadNeeded(false);
+  },[reload])
 
   
 

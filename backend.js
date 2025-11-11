@@ -141,19 +141,11 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-const date = new Date();
-
-//this route just returns static files test JSON data to not have to deal with
-//seting up data flows quite yet
-app.use("/api/test", (req, res) => {
-  console.log("Sending JSON test data", date.getMinutes(), date.getSeconds());
-  res.json({ staticTestCoodinates });
-});
 
 app.post("/api/posts", (req, res) => {
   console.log(req.body);
   const data = req.body;
-  data.date = Date.now()
+  //data.date = Date.now();
   MongoConnector.addPost(data);
   res.sendStatus(200);
 });
@@ -165,6 +157,16 @@ app.post("/api/updatePost", async (req, res) => {
   delete data._id;
   try {
       await mongoConnection.updatePost(id,data);
+      res.sendStatus(200);
+  } catch (error){
+    console.error()
+  }
+});
+
+app.post("/api/posts/delete", async (req, res) => {
+  console.log("Deleting post");
+  try {
+      await mongoConnection.deletePost(req.body.id);
       res.sendStatus(200);
   } catch (error){
     console.error()
