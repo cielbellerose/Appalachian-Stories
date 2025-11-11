@@ -1,8 +1,10 @@
 const me = {}
 
 me.serverName = "http://localhost:3000";
-me.postUpdateEndpoint = "/api/posts";
-me.toPosts = me.serverName + me.postUpdateEndpoint;
+me.sendPostsSuffix = "/api/posts";
+me.updatePostsSuffix = "/api/updatePost"
+me.toPosts = me.serverName + me.sendPostsSuffix;
+me.updatePosts = me.serverName + me.updatePostsSuffix;
 
 /* Allows sending a post update. Takes JSON postdata, as well as an optional
 react hook to indicate when done.
@@ -33,6 +35,17 @@ me.getPostsForUser = async (username) => {
 me.getURLforMap = (user,percent1,percent2) => {
     const url = me.serverName + "/api/pic?" + new URLSearchParams({"user":user,"p1":percent1,"p2":percent2});
     return url
+}
+
+me.updatePost = (postdata) => {
+    fetch(me.updatePosts, {
+        method: 'POST',
+        headers: { "Content-Type" : "application/json"},
+        body: JSON.stringify(postdata)
+    });
+}
+me.deletePost = () => {
+
 }
 
 
