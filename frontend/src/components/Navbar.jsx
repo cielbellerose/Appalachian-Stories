@@ -50,9 +50,9 @@ function TrailNavbar() {
     <>
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="/view">Hiking Stories</Navbar.Brand>
+          <Navbar.Brand>Hiking Stories</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/">Edit</Nav.Link>
+            <Nav.Link href="/">Edit</Nav.Link> 
             {/* Change this formatting later */}
             <Nav.Link href="/login">Login</Nav.Link>
             {/* Remove this but just for ease of access rn*/}
