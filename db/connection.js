@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 const dbUrl = process.env.MONGODB_URI || "mongodb://localhost:27017";
-const dbName = "hiking-stories";
+const dbName = process.env.MONGODB_DB_NAME || "hiking-stories";
 let database = null;
 
 export async function connectDB() {

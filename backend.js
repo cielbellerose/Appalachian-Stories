@@ -1,24 +1,10 @@
 import express from "express";
 import session from "express-session";
-import path from "path";
 import passport from "./config/passport.js"
 
 import LoginRouter from "./routes/LoginRouter.js";
 
-
-
-import { formidable } from "formidable";
-import fs from "fs";
 import { fileURLToPath } from "url";
-import MongoConnector from "./db/mongoConnection.js";
-import exifr from "exifr"; // => exifr/dist/full.umd.cjs
-import mappify from "./frontend/src/modules/mappify.js";
-import mongoPicturesConnnector from "./db/mongoPicturesConnnector.js";
-import mongoConnection from "./db/mongoConnection.js";
-import MongoStore from "connect-mongo";
-
-// import * as dotenv from "dotenv";
-// dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Session configuration
 app.use(
   session({
-    secret: "your-secret-key-change-in-production",
+    secret: process.env.SESSION_SECRET || "your-secret-key-change-in-production";
     resave: false,
     saveUninitialized: false,
     cookie: {

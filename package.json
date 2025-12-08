@@ -7,8 +7,10 @@
   "author": "Jen Gordon and Kinsey Bellerose",
   "license": "MIT",
   "scripts": {
-    "start": "node --watch backend.js",
-    "dev": "npx nodemon backend.js"
+    "start": "node backend.js",
+    "dev": "npx nodemon backend.js",
+    "frontend:build": "cd frontend && npm run build && cd ..",
+    "install:all": "npm install && cd frontend && npm install && cd .."
   },
   "devDependencies": {
     "@eslint/js": "^9.38.0",
