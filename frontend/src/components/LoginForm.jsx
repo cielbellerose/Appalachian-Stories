@@ -15,9 +15,9 @@ export default function LoginForm({ onSignupSelection }) {
     event.preventDefault();
     setLoading(true);
     try {
-      console.log("Sending login request to:", "/api/login");
+      console.log("Sending login request to:", "/api/auth/login");
 
-      const res = await fetch(Server.serverName + "/api/login", {
+      const res = await fetch(Server.serverName + "/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

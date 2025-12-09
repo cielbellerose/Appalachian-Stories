@@ -4,8 +4,8 @@ import passport from "./config/passport.js";
 import fs from "fs";
 
 import LoginRouter from "./routes/LoginRouter.js";
-import PostsRouter from "./routes/posts/PostsRouter";
-import PicturesRouter from "./routes/pictures/PicturesRouter";
+import PostsRouter from "./routes/posts/PostsRouter.js";
+import PicturesRouter from "./routes/pictures/PicturesRouter.js";
 
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";

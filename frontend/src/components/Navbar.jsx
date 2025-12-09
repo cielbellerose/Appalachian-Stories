@@ -6,8 +6,7 @@ import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import EditProfileForm from "./EditProfileForm.jsx";
 import user from "../modules/user.js";
-import Server from "../modules/ServerConnector.js"
-
+import Server from "../modules/ServerConnector.js";
 
 function TrailNavbar() {
   const [username, setUsername] = useState(null); //TODO double check that current user is overriding
@@ -18,7 +17,7 @@ function TrailNavbar() {
   useEffect(() => {
     async function checkLogin() {
       const currentUsername = await user.getCurrentUser();
-      console.log("currentusername:",currentUsername)
+      console.log("currentusername:", currentUsername);
       if (currentUsername) {
         setUsername(currentUsername);
       }
@@ -28,9 +27,9 @@ function TrailNavbar() {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch(Server.serverName + "/api/logout", {
+      const response = await fetch(Server.serverName + "/api/auth/logout", {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
       });
 
       if (response.ok) {
@@ -50,13 +49,10 @@ function TrailNavbar() {
     <>
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="/view">Hiking Stories</Navbar.Brand>
+          <Navbar.Brand href="/">Appalachian Stories</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="/">Edit</Nav.Link>
-            {/* Change this formatting later */}
-            <Nav.Link href="/login">Login</Nav.Link>
-            {/* Remove this but just for ease of access rn*/}
-            <Nav.Link href={`/viewPost/${username}`}>Post View</Nav.Link>
+            <Nav.Link href={`/viewPost/${username}`}>Posts</Nav.Link>
             <Nav.Link href="/new">New</Nav.Link>
           </Nav>
           <Nav>

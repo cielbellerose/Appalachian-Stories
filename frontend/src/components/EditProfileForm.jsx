@@ -2,7 +2,7 @@
 import { useState } from "react";
 import styles from "../css/ProfileForm.module.css";
 import toast from "react-hot-toast";
-import Server from "../modules/ServerConnector.js"
+import Server from "../modules/ServerConnector.js";
 
 export default function EditProfileForm({
   currentUsername,
@@ -11,9 +11,11 @@ export default function EditProfileForm({
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (!username.trim() && !password.trim()) {
       toast.error("Please enter a new username or password");
@@ -21,27 +23,15 @@ export default function EditProfileForm({
     }
 
     try {
-      const response = await fetch(Server.serverName + "/api/update-profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Profile updated successfully!");
-        onUpdate(data.username);
-        onClose();
-      } else {
-        toast.error(data.error || "Failed to update profile");
-      }
-    } catch (err) {
-      toast.error("An error occurred. Please try again.");
-      console.error("Error updating profile:", err);
+      const data = await Server.updateProfile(username, password);
+      toast.success("Profile updated successfully!");
+      onUpdate(data.username);
+      onClose();
+    } catch (error) {
+      toast.error(error.message || "Failed to update profile");
+      console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,7 +58,7 @@ export default function EditProfileForm({
 
       <div className={styles.buttonGroup}>
         <button type="submit" className={styles.submitButton}>
-          {"Update Profile"}
+          {loading ? "Updating..." : "Update Profile"}
         </button>
         <button type="button" onClick={onClose} className={styles.cancelButton}>
           Cancel

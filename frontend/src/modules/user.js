@@ -1,19 +1,23 @@
-import Server from "./ServerConnector.js"
-
+import Server from "./ServerConnector.js";
 
 const user = {};
 
 user.getCurrentUser = async () => {
   try {
-    console.log("entered try of get current user...")
-    const response = await fetch(Server.serverName + "/api/current_user", {
+    console.log(
+      "Getting current user from:",
+      Server.serverName + "/api/auth/current_user"
+    );
+    const response = await fetch(Server.serverName + "/api/auth/current_user", {
       credentials: "include",
     });
     if (response.ok) {
-      console.log("response was okayy!!! response", response)
       const data = await response.json();
-      console.log("response.json : ", data)
-      return data.username;
+      console.log("Current user data:", data);
+      if (data.authenticated) {
+        return data.username;
+      }
+      return null;
     }
     return null;
   } catch (error) {
