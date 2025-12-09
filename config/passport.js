@@ -36,19 +36,26 @@ const strategy = new LocalStrategy(
 
 passport.use(strategy);
 
-// Serialize user (what to store in session)
 passport.serializeUser((user, done) => {
+  console.log("SERIALIZE USER - Storing ID in session:", user._id);
   done(null, user._id);
 });
 
 passport.deserializeUser(async (id, done) => {
+  console.log("DESERIALIZE USER - Loading user with ID:", id);
   try {
     const user = await findUserById(id);
     if (user) {
-      delete user.passwordHash;
+      console.log("DESERIALIZE USER - Found user:", user.username);
+      const userWithoutPassword = { ...user };
+      delete userWithoutPassword.passwordHash;
+      done(null, userWithoutPassword);
+    } else {
+      console.log("DESERIALIZE USER - User not found!");
+      done(null, false);
     }
-    done(null, user);
   } catch (error) {
+    console.error("DESERIALIZE USER - Error:", error);
     done(error);
   }
 });

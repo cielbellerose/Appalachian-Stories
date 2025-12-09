@@ -9,11 +9,10 @@ import user from "../modules/user.js";
 import Server from "../modules/ServerConnector.js";
 
 function TrailNavbar() {
-  const [username, setUsername] = useState(null); //TODO double check that current user is overriding
+  const [username, setUsername] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const navigate = useNavigate(); // for switching pages
+  const navigate = useNavigate();
 
-  // check if a user is currently logged in
   useEffect(() => {
     async function checkLogin() {
       const currentUsername = await user.getCurrentUser();

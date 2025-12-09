@@ -1,27 +1,63 @@
 import { Link } from "react-router-dom";
 import Server from "../modules/ServerConnector";
 
-export default function Post({ post, setReloadNeeded }) {
+export default function Post({ post, setReloadNeeded, canModify = true }) {
   function handleDelete(postID) {
-    Server.deletePost(postID);
-    setReloadNeeded(true);
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      Server.deletePost(postID);
+      if (setReloadNeeded) {
+        setReloadNeeded(true);
+      }
+    }
   }
 
   return (
-    <div style={{ display: "flex" }} className="post">
-      <Link state={post} to={{ pathname: "/view" }} className="post-title">
-        {post.title}
-      </Link>
-      <Link state={post} to={{ pathname: "/new" }} className="post-edit">
-        Edit
-      </Link>
-      <Link
-        onClick={() => handleDelete(post._id)}
-        to={{ pathname: `/viewPost/${post.user}` }}
-        className="post-delete"
-      >
-        Delete
-      </Link>
-    </div>
+    <Card className="mb-3">
+      <Card.Body>
+        <Card.Title>
+          <Link state={post} to="/view" className="text-decoration-none">
+            {post.title}
+          </Link>
+        </Card.Title>
+        <Card.Text className="text-muted">
+          {post.text?.substring(0, 150)}...
+        </Card.Text>
+
+        <div className="d-flex justify-content-between align-items-center">
+          <small className="text-muted">
+            Posted by: {post.username || post.user || "Unknown"}
+          </small>
+
+          <div className="d-flex gap-2">
+            <Link
+              state={post}
+              to="/view"
+              className="btn btn-outline-primary btn-sm"
+            >
+              View
+            </Link>
+
+            {canModify && (
+              <>
+                <Link
+                  state={post}
+                  to="/new"
+                  className="btn btn-outline-secondary btn-sm"
+                >
+                  Edit
+                </Link>
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => handleDelete(post._id)}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          </div>
+        </div>
+      </Card.Body>
+    </Card>
   );
 }

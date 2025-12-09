@@ -53,6 +53,7 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   })
 );
@@ -82,6 +83,24 @@ app.get("/api/debug/users", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+});
+
+app.get("/api/debug/auth", (req, res) => {
+  console.log("=== AUTH DEBUG ===");
+  console.log("Session ID:", req.sessionID);
+  console.log("Is authenticated:", req.isAuthenticated());
+  console.log("User:", req.user);
+  console.log("Cookies:", req.headers.cookie);
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+
+  res.json({
+    sessionID: req.sessionID,
+    authenticated: req.isAuthenticated(),
+    user: req.user,
+    cookiePresent: !!req.headers.cookie,
+    nodeEnv: process.env.NODE_ENV,
+    secureCookie: process.env.NODE_ENV === "production",
+  });
 });
 
 app.get("*splat", function (req, res) {
