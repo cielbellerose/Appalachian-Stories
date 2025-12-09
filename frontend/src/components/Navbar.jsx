@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import EditProfileForm from "./EditProfileForm.jsx";
 import user from "../modules/user.js";
 import Server from "../modules/ServerConnector.js";
-import styles from "./Navbar.module.css";
+import styles from "../css/Navbar.module.css";
 
 function TrailNavbar() {
   const [username, setUsername] = useState(null);
