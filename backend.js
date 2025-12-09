@@ -84,27 +84,7 @@ app.get("/api/debug/users", async (req, res) => {
   }
 });
 
-// Formatting for Render
-app.get("/*", function (req, res) {
-  const indexPath = join(__dirname, "./frontend/dist/index.html");
-
-  console.log(`=== Serving index.html for: ${req.path} ===`);
-  console.log(`Request URL: ${req.url}`);
-  console.log(`Looking for index.html at: ${indexPath}`);
-  console.log(`File exists: ${fs.existsSync(indexPath)}`);
-
-  if (!fs.existsSync(indexPath)) {
-    console.error("ERROR: index.html not found!");
-    console.log("Current directory contents:");
-    const distPath = join(__dirname, "./frontend/dist");
-    if (fs.existsSync(distPath)) {
-      const files = fs.readdirSync(distPath);
-      console.log("Files in dist:", files);
-    } else {
-      console.log("dist folder doesn't exist!");
-    }
-    return res.status(500).send("Frontend not built properly");
-  }
+app.get("*splat", function (req, res) {
   res.sendFile("index.html", {
     root: join(__dirname, "./frontend/dist"),
   });
