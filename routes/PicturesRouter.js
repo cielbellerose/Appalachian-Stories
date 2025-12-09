@@ -3,10 +3,9 @@ import formidable from "formidable";
 import fs from "fs";
 import path from "path";
 import exifr from "exifr";
-import mappify from "../../frontend/src/modules/mappify.js";
-import { addPicture } from "../../models/pictures.js";
 
-import { getPicturesForPosts } from "../../models/pictures.js";
+import { addPicture, getPicturesForPosts } from "../models/pictures.js";
+import mappify from "../frontend/src/modules/mappify.js";
 
 const PicturesRouter = express.Router();
 

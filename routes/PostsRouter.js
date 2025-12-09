@@ -1,10 +1,5 @@
 import express from "express";
-import {
-  addPost,
-  getPosts,
-  deletePost,
-  updatePost,
-} from "../../models/posts.js";
+import { addPost, deletePost, getPosts, updatePost } from "../models/posts.js";
 
 const PostsRouter = express.Router();
 

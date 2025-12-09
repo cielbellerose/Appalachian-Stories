@@ -1,5 +1,5 @@
-import { getDB } from "../db/connection.js";
 import { ObjectId } from "mongodb";
+import { getDB } from "../db/connection.js";
 
 export const addPost = async (postData) => {
   try {

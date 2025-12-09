@@ -1,6 +1,6 @@
-import { getDB } from "../db/connection.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
+import { getDB } from "../db/connection.js";
 
 export const createUser = async (username, password) => {
   try {
