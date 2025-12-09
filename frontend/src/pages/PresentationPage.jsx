@@ -46,22 +46,22 @@ export default function PresentationPage() {
     fetchMapUrl();
   }, [location.state]);
 
-  if (!location.state) {
-    return (
-      <>
-        <TrailNavbar />
-        <div className="container mt-4">
-          <div className="alert alert-danger">
-            <h2>Error: Missing Presentation Data</h2>
-            <p>
-              No presentation data was provided. Please go back and select a
-              post to view.
-            </p>
-          </div>
-        </div>
-      </>
-    );
-  }
+  // if (!location.state) {
+  //   return (
+  //     <>
+  //       <TrailNavbar />
+  //       <div className="container mt-4">
+  //         <div className="alert alert-danger">
+  //           <h2>Error: Missing Presentation Data</h2>
+  //           <p>
+  //             No presentation data was provided. Please go back and select a
+  //             post to view.
+  //           </p>
+  //         </div>
+  //       </div>
+  //     </>
+  //   );
+  // }
 
   const post = {
     text: location.state.text || "",

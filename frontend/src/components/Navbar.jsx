@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import EditProfileForm from "./EditProfileForm.jsx";
 import user from "../modules/user.js";
 import Server from "../modules/ServerConnector.js";
+import styles from "./Navbar.module.css";
 
 function TrailNavbar() {
   const [username, setUsername] = useState(null);
@@ -33,7 +34,7 @@ function TrailNavbar() {
 
       if (response.ok) {
         setUsername(null);
-        navigate("/login"); // switch to login page
+        navigate("/login");
       }
     } catch (error) {
       console.error("Error logging out:", error);
@@ -46,34 +47,42 @@ function TrailNavbar() {
 
   return (
     <>
-      <Navbar bg="dark" data-bs-theme="dark">
+      <Navbar className={styles.navbar}>
         <Container>
-          <Navbar.Brand href="/">Appalachian Stories</Navbar.Brand>
+          <Navbar.Brand href="/" className={styles.brand}>
+            Appalachian Stories
+          </Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="/">Edit</Nav.Link>
-            <Nav.Link href={`/viewPost/${username}`}>Posts</Nav.Link>
-            <Nav.Link href="/new">New</Nav.Link>
+            <Nav.Link href="/" className={styles.navLink}>
+              Edit
+            </Nav.Link>
+            <Nav.Link href={`/viewPost/${username}`} className={styles.navLink}>
+              Posts
+            </Nav.Link>
+            <Nav.Link href="/new" className={styles.navLink}>
+              New
+            </Nav.Link>
           </Nav>
           <Nav>
             {username ? (
               <>
-                <Navbar.Text
-                  className="user"
-                  style={{
-                    color: "#03b50fff",
-                    fontWeight: "600",
-                    marginRight: "20px",
-                  }}
-                >
+                <Navbar.Text className={styles.userDisplay}>
                   {username}
                 </Navbar.Text>
-                <Nav.Link onClick={() => setShowEditModal(true)}>
+                <Nav.Link
+                  onClick={() => setShowEditModal(true)}
+                  className={styles.navLink}
+                >
                   Edit Profile
                 </Nav.Link>
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                <Nav.Link onClick={handleLogout} className={styles.navLink}>
+                  Logout
+                </Nav.Link>
               </>
             ) : (
-              <Nav.Link href="/login">Login</Nav.Link>
+              <Nav.Link href="/login" className={styles.navLink}>
+                Login
+              </Nav.Link>
             )}
           </Nav>
         </Container>

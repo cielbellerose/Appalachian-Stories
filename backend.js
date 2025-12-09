@@ -49,11 +49,13 @@ app.use(
       process.env.SESSION_SECRET || "your-secret-key-change-in-production",
     resave: false,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "none",
+      domain: ".onrender.com",
     },
   })
 );
@@ -100,6 +102,32 @@ app.get("/api/debug/auth", (req, res) => {
     cookiePresent: !!req.headers.cookie,
     nodeEnv: process.env.NODE_ENV,
     secureCookie: process.env.NODE_ENV === "production",
+  });
+});
+
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log(`   Path: ${req.path}`);
+  console.log(`   Original URL: ${req.originalUrl}`);
+  next();
+});
+
+app.get("/api/test-cookie", (req, res) => {
+  res.cookie("testcookie", "working", {
+    secure: true,
+    httpOnly: false, // Set to false so browser can see it
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  res.json({ message: "Cookie set" });
+});
+
+app.get("/api/check-cookie", (req, res) => {
+  console.log("Cookies received:", req.headers.cookie);
+  res.json({
+    cookiePresent: !!req.cookies.testcookie,
+    allCookies: req.cookies,
+    headers: req.headers.cookie,
   });
 });
 

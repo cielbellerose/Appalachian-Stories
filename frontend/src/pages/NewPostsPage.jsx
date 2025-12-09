@@ -17,7 +17,7 @@ export default function NewPostsPage() {
     async function checkUser() {
       const currentUser = await userModule.getCurrentUser();
       if (!currentUser) {
-        navigate("/login"); // if not logged in, go to login
+        // navigate("/login");
       } else {
         setUser(currentUser);
       }

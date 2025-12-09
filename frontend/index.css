@@ -1,6 +1,16 @@
+:root {
+  --accent: #9d69a3; /*Vintage Lavender - Accent*/
+  --accent-hover: #D9DBF1; /*Lavender - Accent Light*/
+  --background: #F1FFE7; /*Honeydew - Background */
+  --light-main: #2e933C; /*Forest Green*/
+  --main: #297045; /*Turf Green*/
+  --text: black;
+  --text-light:white;
+}
+
 h1 {
   text-align: center;
-  color: #00471b;
+  color: var(--main);
   font-size: 3rem;
   margin: 20px;
   font-weight: 900;
@@ -82,7 +92,7 @@ svg path {
 }
 
 svg .Dot {
-  r: 4.5;
+  r: 6;
   fill: red;
   color: "red";
   transform: translate(-36px, -20px);
@@ -91,7 +101,7 @@ svg .Dot {
 }
 
 svg .Dot:hover {
-  r: 6;
+  r: 10;
 }
 
 .map svg foreignObject {
