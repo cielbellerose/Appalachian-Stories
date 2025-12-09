@@ -84,7 +84,7 @@ app.get("/api/debug/users", async (req, res) => {
   }
 });
 
-app.get("/*", (req, res) => {
+app.get("*splat", function (req, res) {
   res.sendFile(join(__dirname, "./frontend/dist/index.html"));
 });
 
