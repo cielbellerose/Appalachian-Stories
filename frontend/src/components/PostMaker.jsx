@@ -64,7 +64,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
       start: picturesSelected.start,
       Percent2: recordedPercent.end,
       end: picturesSelected.end,
-      user: currentUser.id || currentUser._id || currentUser.username,
+      user: currentUser.username,
     };
     console.log("submission data", data);
 

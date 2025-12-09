@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 
 import NewPostsPage from "./pages/NewPostsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-import TrailEditPage from "./pages/TrailEditPage.jsx";
+import UploadPhotosPage from "./pages/UploadPhotosPage.jsx";
 import PresentationPage from "./pages/PresentationPage.jsx";
 import PostListPage from "./pages/PostListPage.jsx";
 
@@ -19,7 +19,7 @@ root.render(
     <StrictMode>
       <Toaster position="top-right" />
       <Routes>
-        <Route path="/" element={<TrailEditPage />} />
+        <Route path="/" element={<UploadPhotosPage />} />
         <Route path="/new" element={<NewPostsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/view" element={<PresentationPage />} />

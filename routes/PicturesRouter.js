@@ -4,7 +4,11 @@ import fs from "fs";
 import path from "path";
 import exifr from "exifr";
 
-import { addPicture, getPicturesForPosts } from "../models/pictures.js";
+import {
+  addPicture,
+  getPicturesForPosts,
+  getUserPhotos,
+} from "../models/pictures.js";
 import mappify from "../frontend/src/modules/mappify.js";
 
 const PicturesRouter = express.Router();
@@ -96,5 +100,23 @@ async function getEXIFdata(filePath, filename, username, baseURL) {
     throw error;
   }
 }
+
+PicturesRouter.get("/user/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    console.log("GET ALL photos for user:", username);
+
+    const photos = await getUserPhotos(username);
+
+    const filenames = photos.map(
+      (photo) => photo.filename || photo.url?.split("/").pop()
+    );
+
+    res.json(filenames);
+  } catch (error) {
+    console.error("Error fetching user photos:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 export default PicturesRouter;

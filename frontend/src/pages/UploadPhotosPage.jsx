@@ -3,7 +3,7 @@ import TrailNavbar from "../components/Navbar.jsx";
 import UploadPhotosModal from "../components/UploadPhotosModal.jsx";
 import Server from "../modules/ServerConnector.js";
 
-export default function TrailEditPage() {
+export default function UploadPhotosPage() {
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
@@ -17,9 +17,9 @@ export default function TrailEditPage() {
         setCurrentUser(currentUser);
 
         if (currentUser) {
-          const userId =
-            currentUser.id || currentUser._id || currentUser.username;
-          const photosData = await Server.getUserPhotos(userId);
+          const username = currentUser.username || currentUser.user?.username;
+          console.log("Loading photos for username:", username);
+          const photosData = await Server.getUserPhotos(username);
           setPhotos(photosData);
         }
       } catch (error) {

@@ -1,12 +1,12 @@
 :root {
   --accent: #9d69a3; /*Vintage Lavender - Accent*/
   --accent-hover: #724976; /*Lavender*/
-  --background2: #D9DBF1; /*Dark Purple D9DBF1*/
-  --background: #F1FFE7; /*Honeydew - Background */
-  --light-main: #2e933C; /*Forest Green*/
+  --background2: #d9dbf1; /*Dark Purple D9DBF1*/
+  --background: #f1ffe7; /*Honeydew - Background */
+  --light-main: #2e933c; /*Forest Green*/
   --main: #297045; /*Turf Green*/
   --text: black;
-  --text-light:white;
+  --text-light: white;
 }
 
 h1 {
@@ -14,11 +14,21 @@ h1 {
   color: var(--main);
   font-size: 3rem;
   margin: 20px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  background: white;
   padding: 20px 40px;
-  border-radius: 12px;
+  letter-spacing: 2px;
+  font-weight: 900;
+  background: white;
+
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+
+  position: relative;
+  overflow: hidden;
+
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-shadow:
     1px 1px 0px #ffffff,

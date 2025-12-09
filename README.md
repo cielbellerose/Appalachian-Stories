@@ -15,7 +15,7 @@ This is a full stack application with Node + Express + Mongo and React. The webs
 
 ## Site Structure  
 - **Login Page (`LoginPage.jsx`)** Login or Sign up
-- **Trail Edit page(`TrailEditPage.jsx`)** Upload photos!
+- **Trail Edit page(`UploadPhotosPage.jsx`)** Upload photos!
 - **Post List Page (`PostListPage.jsx`)** See a list of all your posts
 - **Presentation Page(`PresentationPage.jsx`)** Present an individual post! 
 - **New Post Page(`NewPostsPage.jsx`)** Create a post! View your photos on the map!

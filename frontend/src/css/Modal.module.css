@@ -38,7 +38,7 @@
 }
 
 .modal {
-  background-color: var(--background2);
+  background-color: var(--background);
 }
 
 .hiddenInput {
@@ -64,15 +64,15 @@
 }
 
 .modal {
-  background-color: var(--background2);
+  background-color: var(--background);
   border-radius: 10px;
   overflow: hidden;
 }
 
 .modalBody {
   background-color: var(--background);
-  border-left: 3px solid var(--background2);
-  border-right: 3px solid var(--background2);
+  border-left: 3px solid var(--background);
+  border-right: 3px solid var(--background);
   padding: 20px;
 }
 

@@ -4,7 +4,6 @@ me.serverName = import.meta.env.PROD
   ? "https://appalachian-stories.onrender.com"
   : "http://localhost:3000";
 
-
 /* Allows sending a post update. Takes JSON postdata, as well as an optional
 react hook to indicate when done.
 */
@@ -215,11 +214,28 @@ me.uploadPicture = async (formData) => {
 };
 
 me.getUserPhotos = async (userId) => {
-  const response = await fetch(`${me.serverName}/api/pic/user/${userId}`, {
-    credentials: "include"
-  });
-  if (!response.ok) throw new Error("Failed to fetch photos");
-  return await response.json();
+  try {
+    console.log("Getting ALL photos for user:", userId);
+
+    const response = await fetch(`${me.serverName}/api/pic/user/${userId}`, {
+      credentials: "include",
+    });
+
+    console.log("Response status:", response.status);
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to fetch photos");
+    }
+
+    const data = await response.json();
+    console.log("Photos received:", data.length, "photos");
+
+    return data;
+  } catch (error) {
+    console.error("Error getting user photos:", error);
+    throw error;
+  }
 };
 
 export default me;

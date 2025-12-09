@@ -53,6 +53,7 @@
 
 .userDisplay {
   color: var(--accent);
+  text-shadow: 1px 1px 1px black;
   font-weight: 700;
   padding: 10px 20px;
   margin: 0 5px;

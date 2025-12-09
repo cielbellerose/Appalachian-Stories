@@ -29,11 +29,11 @@ export default function PostListPage() {
           setError("Please log in to view posts");
           return;
         }
-
-        const user = user || userData.username || userData.id || userData._id;
+        const targetUser =
+          user || userData.username || userData.id || userData._id;
 
         // fetch posts for user
-        const postsData = await Server.getPostsForUser(user);
+        const postsData = await Server.getPostsForUser(targetUser);
         setPosts(postsData.d || postsData.posts || postsData);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -42,7 +42,6 @@ export default function PostListPage() {
         setLoading(false);
       }
     }
-
     fetchPosts();
   }, [user, reloadNeeded]);
 
