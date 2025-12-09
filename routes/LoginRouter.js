@@ -7,7 +7,8 @@ import { getDB } from "../db/connection.js";
 const loginRouter = express.Router();
 
 loginRouter.post("/login", (req, res, next) => {
-  console.log("hit api/auth/login");
+  console.log("LOGIN: Starting login for:", req.body.username);
+
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error("Passport auth error:", err);
@@ -17,20 +18,28 @@ loginRouter.post("/login", (req, res, next) => {
       return res.status(401).json({ error: info?.message || "Login failed" });
     }
 
+    console.log("LOGIN: Calling req.login() for user:", user.username);
+
     req.login(user, (loginErr) => {
       if (loginErr) {
         console.error("Login error:", loginErr);
         return res.status(500).json({ error: "Session error" });
       }
-      console.log("User logged in:", user.username);
+      console.log("LOGIN: req.login() successful");
+      console.log("LOGIN: Session ID after login:", req.sessionID);
+      console.log("LOGIN: Session:", req.session);
 
-      const userResponse = { ...user };
-      delete userResponse.passwordHash;
+      console.log(
+        "LOGIN: Cookie header that will be sent:",
+        res.getHeaders()["set-cookie"]
+      );
 
       res.json({
         success: true,
         username: user.username,
+        userId: user._id,
         message: "Login successful",
+        sessionId: req.sessionID,
       });
     });
   })(req, res, next);

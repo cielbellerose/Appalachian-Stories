@@ -44,6 +44,9 @@ app.use(
         process.env.MONGODB_URI ||
         "mongodb://localhost:27017/appalachian-stories",
       ttl: 24 * 60 * 60,
+      autoRemove: "native",
+      collectionName: "sessions",
+      stringify: false,
     }),
     secret:
       process.env.SESSION_SECRET || "your-secret-key-change-in-production",
@@ -51,11 +54,10 @@ app.use(
     saveUninitialized: false,
     proxy: true,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: "none",
-      domain: ".onrender.com",
     },
   })
 );
@@ -120,6 +122,32 @@ app.get("/api/test-cookie", (req, res) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
   res.json({ message: "Cookie set" });
+});
+
+app.get("/api/test-cookie-set", (req, res) => {
+  console.log("Setting test cookie...");
+
+  res.cookie("test_cookie", "hello_world", {
+    secure: true,
+    httpOnly: false, // Set to false so we can see it in browser
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+
+  res.json({
+    message: "Test cookie set",
+    instructions: "Check Application > Cookies in browser DevTools",
+  });
+});
+
+app.get("/api/test-cookie-check", (req, res) => {
+  console.log("Cookies received:", req.headers.cookie);
+
+  res.json({
+    cookiePresent: !!req.cookies.test_cookie,
+    cookiesReceived: req.headers.cookie || "None",
+    allCookies: req.cookies,
+  });
 });
 
 app.get("/api/check-cookie", (req, res) => {
