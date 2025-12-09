@@ -77,7 +77,12 @@ app.get("/api/debug/users", async (req, res) => {
   }
 });
 
-app.get("*splat", function (req, res) {
+// Formatting for Render
+app.get(["/", "/:splat*"], function (req, res) {
+  console.log(`Catch-all route hit for: ${req.url}`);
+  console.log(`Request path: ${req.path}`);
+  console.log(`Request originalUrl: ${req.originalUrl}`);
+
   res.sendFile("index.html", {
     root: join(__dirname, "./frontend/dist"),
   });

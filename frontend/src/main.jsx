@@ -1,8 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-
-import { BrowserRouter, Routes, Route } from "react-router";
-import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import NewPostsPage from "./pages/NewPostsPage.jsx";
@@ -16,7 +14,7 @@ import "../index.css";
 const container = document.getElementById("root");
 const root = createRoot(container);
 
-ReactDOM.createRoot(root).render(
+root.render(
   <BrowserRouter>
     <StrictMode>
       <Toaster position="top-right" />
