@@ -2,20 +2,22 @@ import { useNavigate } from "react-router";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import styles from "../css/LoginForm.module.css";
-import Server from "../modules/ServerConnector.js"
+import Server from "../modules/ServerConnector.js";
 
 export default function RegisterForm({ onLoginSelection }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // for switching page after signup
+  const navigate = useNavigate();
 
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     setLoading(true);
+
     try {
-      const res = await fetch(Server.serverName + "/api/signup", {
+      const res = await fetch(Server.serverName + "/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,6 +27,7 @@ export default function RegisterForm({ onLoginSelection }) {
       });
 
       const data = await res.json();
+
       if (!res.ok) {
         toast.error(data.error || "Signup failed");
         setLoading(false);
@@ -32,18 +35,21 @@ export default function RegisterForm({ onLoginSelection }) {
       }
 
       toast.success("Account created successfully!");
+
       console.log("Signup successful", data);
-      navigate("/"); // switch to edit trail page after successful sign up
+      navigate("/");
     } catch (error) {
       toast.error("Error signing up");
       console.error("Signup error:", error);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
   return (
     <>
       <div className={styles.formContainer}>
-        <h2 className={styles.title}>Register</h2>
+        <h2 className={styles.title}>New User</h2>
         <form className={styles.form} onSubmit={handleSubmitForm}>
           <input
             type="text"
@@ -51,6 +57,8 @@ export default function RegisterForm({ onLoginSelection }) {
             className={styles.input}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            disabled={loading}
+            required
           />
           <input
             type="password"
@@ -58,15 +66,34 @@ export default function RegisterForm({ onLoginSelection }) {
             className={styles.input}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={loading}
+            required
           />
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            className={styles.input}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={loading}
+            required
+          />
+          <div className={styles.requirements}>
+            Password must be at least 6 characters
+          </div>
           <input
             type="submit"
             className={styles.submitButton}
-            value={loading ? "Loading" : "Register"}
+            value={loading ? "Creating Account..." : "Register"}
+            disabled={loading}
           />
         </form>
         <div>
-          <button className={styles.switchButton} onClick={onLoginSelection}>
+          <button
+            className={styles.switchButton}
+            onClick={onLoginSelection}
+            disabled={loading}
+          >
             Go to Login
           </button>
         </div>

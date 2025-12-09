@@ -61,7 +61,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/", express.static("./frontend/dist"));
+app.use(express.static(join(__dirname, "./frontend/dist")));
 app.use("/user_data", express.static(join(__dirname, "user_data")));
 
 app.use("/api/auth", LoginRouter);
@@ -84,10 +84,8 @@ app.get("/api/debug/users", async (req, res) => {
   }
 });
 
-app.get("*splat", function (req, res) {
-  res.sendFile("index.html", {
-    root: join(__dirname, "./frontend/dist"),
-  });
+app.get("*", (req, res) => {
+  res.sendFile(join(__dirname, "./frontend/dist/index.html"));
 });
 
 app.listen(PORT, () => {

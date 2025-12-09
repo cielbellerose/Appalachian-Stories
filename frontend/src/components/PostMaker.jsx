@@ -6,15 +6,7 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import Server from "../modules/ServerConnector";
 import user from "../modules/user";
 
-// https://react-bootstrap.netlify.app/docs/components/modal/
-// Vertically centered modal
-export default function PostMaker({
-  openPic,
-  setOpenPic,
-  percent,
-  setCurrentPercent,
-  PrevData,
-}) {
+export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
   const [radioValue, setRadioValue] = useState("0");
   const [delayPictureSet, setDelayPictureSet] = useState(() => true);
   const [picturesSelected, setPicturesSelected] = useState({
@@ -25,15 +17,20 @@ export default function PostMaker({
     start: -1,
     end: -1,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const textField = useRef(null);
   const title = useRef(null);
 
-  // if you need the user use the currentUser var
   const [currentUser, setUser] = useState(null);
+
   useEffect(() => {
     async function fetchUser() {
-      const userData = await user.getCurrentUser();
-      setUser(userData);
+      try {
+        const userData = await user.getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
     }
     fetchUser();
   }, []);
@@ -47,11 +44,18 @@ export default function PostMaker({
     if (radioValue === "0") {
       setRecordedPercent((prev) => ({ ...prev, start: percent }));
     } else setRecordedPercent((prev) => ({ ...prev, end: percent }));
+  }, [percent, radioValue]);
 
-    //console.log("precent",recordedPercent);
-  }, [percent]);
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-  function submit() {
+    if (isSubmitting) return;
+
+    if (!currentUser) {
+      showError("Please log in to create a post");
+      return;
+    }
+
     const data = {
       title: title.current.value,
       text: textField.current.value || "",
@@ -59,29 +63,50 @@ export default function PostMaker({
       start: picturesSelected.start,
       Percent2: recordedPercent.end,
       end: picturesSelected.end,
-      user: currentUser,
+      user: currentUser.id || currentUser._id || currentUser.username,
     };
     console.log("submission data", data);
-    if (data.text == null || data.title == "") {
-      showError("Not enough data");
-      return;
-    }
-    if (data.Percent1 == -1 || data.Percent2 == -1) {
-      showError("Select end and beginning Pictures");
+
+    if (!data.title.trim()) {
+      showError("Title is required");
       return;
     }
 
-    //decide if we're updating a post or creating a new one
-    if (PrevData) {
-      data._id = PrevData._id;
-      Server.updatePost(data);
-    } else {
-      Server.sendPostToServer(data, undefined);
+    if (!data.text.trim()) {
+      showError("Text content is required");
+      return;
+    }
+
+    if (data.Percent1 === -1 || data.Percent2 === -1) {
+      showError("Please select both start and end pictures");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      //decide if we're updating a post or creating a new one
+      if (PrevData) {
+        data._id = PrevData._id;
+        await Server.updatePost(data);
+      } else {
+        await Server.sendPostToServer(data);
+        // reset
+        if (title.current) title.current.value = "";
+        if (textField.current) textField.current.value = "";
+        setPicturesSelected({ start: -1, end: -1 });
+        setRecordedPercent({ start: -1, end: -1 });
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      showError("Failed to save post: " + (error.message || "Unknown error"));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   function showError(Error) {
     console.error(Error);
+    alert(Error);
   }
 
   /* Handles putting displaying the new picture attatched to the selection*/
@@ -90,29 +115,28 @@ export default function PostMaker({
     setOpenPic(
       radioValue === "0" ? picturesSelected.start : picturesSelected.end
     );
-  }, [radioValue]);
+  }, [radioValue, picturesSelected.start, picturesSelected.end, setOpenPic]);
 
   //handle if there's previous data
   useEffect(() => {
     if (PrevData) {
-      setPicturesSelected((prev) => ({
+      setPicturesSelected({
         start: PrevData.start,
         end: PrevData.end,
-      }));
-      setRecordedPercent(() => ({
+      });
+      setRecordedPercent({
         start: PrevData.Percent1,
         end: PrevData.Percent2,
-      }));
+      });
       console.log(recordedPercent);
     }
-  }, []);
+  }, [PrevData]);
 
   /* This covers setting our actual picture parameters. We need to be cautious about overwriting
   user choices on changing parts, and so we have a delayer.
     */
   useEffect(() => {
-    //console.log(picturesSelected);
-    if (delayPictureSet === true) {
+    if (delayPictureSet) {
       setDelayPictureSet(false);
       return;
     }
@@ -122,13 +146,9 @@ export default function PostMaker({
         ? { ...prev, start: openPic }
         : { ...prev, end: openPic }
     );
+  }, [openPic, radioValue, delayPictureSet]);
 
-    // console.log("setCurrentPercent",percent);
-    // console.log("setpictureSelected",picturesSelected);
-    // console.log("openPic",openPic);
-  }, [openPic]);
-
-  function getButtonStyleing(buttonName) {
+  function getButtonStyling(buttonName) {
     if (buttonName === "Start") {
       return picturesSelected.start === -1
         ? "outline-danger"
@@ -137,12 +157,13 @@ export default function PostMaker({
     if (buttonName === "End") {
       return picturesSelected.end === -1 ? "outline-danger" : "outline-success";
     }
-    console.e("Error!");
+    console.error("Error in getButtonStyling");
+    return "outline-secondary";
   }
 
   return (
     <div className="PostForm">
-      <Form action={submit}>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Control
             as="textarea"
@@ -151,13 +172,16 @@ export default function PostMaker({
             placeholder="Title..."
             rows={1}
             ref={title}
+            required
+            disabled={isSubmitting}
           />
           <Form.Control
             as="textarea"
-            defaultValue={PrevData ? PrevData.text : ""}
+            defaultValue={PrevData?.text || ""}
             placeholder="Your adventure here..."
             rows={3}
             ref={textField}
+            disabled={isSubmitting}
           />
           <ButtonGroup className="picture-toggles">
             {radios.map((radio, idx) => (
@@ -165,18 +189,23 @@ export default function PostMaker({
                 key={idx}
                 id={`radio-${idx}`}
                 type="radio"
-                variant={getButtonStyleing(radio.name)}
+                variant={getButtonStyling(radio.name)}
                 name="radio"
                 value={radio.value}
                 checked={radioValue === radio.value}
                 onChange={(e) => setRadioValue(e.currentTarget.value)}
+                disabled={isSubmitting}
               >
                 {radio.name}
               </ToggleButton>
             ))}
           </ButtonGroup>
-          <Button className="submit-button" type="submit">
-            Post
+          <Button
+            className="submit-button"
+            type="submit"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Post"}
           </Button>
         </Form.Group>
       </Form>
