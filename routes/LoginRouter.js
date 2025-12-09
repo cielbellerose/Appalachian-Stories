@@ -1,62 +1,43 @@
 import express from "express";
+import passport from "passport";
 import bcrypt from "bcrypt";
-import { connectDB } from "../db/connection.js";
+import { createUser, findUserByUsername } from "../models/users.js";
+import { getDB } from "../db/connection.js";
 
-const LoginRouter = express.Router();
+const loginRouter = express.Router();
 
-LoginRouter.post("/login", async (req, res) => {
-  console.log("hit api/login");
-  try {
-    const { username, password } = req.body;
-
-    if (!username || !password) {
-      return res
-        .status(400)
-        .json({ error: "Please enter a username and password" });
+loginRouter.post("/login", (req, res, next) => {
+  console.log("hit api/auth/login");
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error("Passport auth error:", err);
+      return res.status(500).json({ error: "Authentication error" });
     }
-
-    const db = await connectDB();
-    const usersCollection = db.collection("users");
-    const user = await usersCollection.findOne({
-      username: username.toLowerCase(),
-    });
-
     if (!user) {
-      return res.status(400).json({ error: "User not found" });
+      return res.status(401).json({ error: info?.message || "Login failed" });
     }
 
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ error: "Incorrect password" });
-    }
-
-    req.session.userId = user._id.toString();
-    console.log("Successfully logged in");
-    req.session.username = user.username;
-
-    // save session data
-
-    req.session.save((err) => {
-      if (err) {
-        console.error("Session save error:", err);
-        return res.status(500).json({ error: "Session save failed" });
+    req.login(user, (loginErr) => {
+      if (loginErr) {
+        console.error("Login error:", loginErr);
+        return res.status(500).json({ error: "Session error" });
       }
+      console.log("User logged in:", user.username);
+
+      const userResponse = { ...user };
+      delete userResponse.passwordHash;
 
       res.json({
         success: true,
-        username: user.username, // ✅ Fixed
+        username: user.username,
         message: "Login successful",
       });
     });
-  } catch (error) {
-    console.error("Failed to log in", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+  })(req, res, next);
 });
 
-LoginRouter.post("/signup", async (req, res) => {
-  console.log("hit api/signup");
+loginRouter.post("/signup", async (req, res) => {
+  console.log("hit api/auth/signup");
   try {
     const { username, password } = req.body;
 
@@ -71,40 +52,26 @@ LoginRouter.post("/signup", async (req, res) => {
         .status(400)
         .json({ error: "Password should be more than 5 characters" });
     }
-
-    const db = await connectDB();
-    const usersCollection = db.collection("users");
-
-    // is the username already in the database?
-    const isExistingUser = await usersCollection.findOne({
-      username: username.toLowerCase(),
-    });
-    if (isExistingUser) {
-      return res.status(400).json({ error: "Username already taken" });
+    const existingUser = await findUserByUsername(username.toLowerCase());
+    if (existingUser) {
+      return res.status(400).json({ error: "Username already exists" });
     }
 
-    console.log("username found not used");
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await createUser(username.toLowerCase(), password);
 
-    const user = {
-      username: username.toLowerCase(),
-      password: hashedPassword,
-    };
-
-    const result = await usersCollection.insertOne(user);
-    req.session.userId = result.insertedId.toString();
-
-    console.log("User created successfully", user);
-    req.session.username = user.username;
-    req.session.save((err) => {
+    req.login(newUser, (err) => {
       if (err) {
-        return res.status(500).json({ error: "Session save failed" });
+        console.error("Auto-login error:", err);
+        return res.status(500).json({ error: "User created but login failed" });
       }
+      const userResponse = { ...newUser };
+      delete userResponse.passwordHash;
 
       res.json({
         success: true,
         message: "User created successfully",
-        user: { username: user.username },
+        username: newUser.username,
+        user: userResponse,
       });
     });
   } catch (error) {
@@ -113,46 +80,48 @@ LoginRouter.post("/signup", async (req, res) => {
   }
 });
 
-LoginRouter.get("/current_user", (req, res) => {
-  console.log("hit api/current_user");
-  const username = req.session.username;
-
-  if (username) {
-    res.json({ username });
+loginRouter.get("/current_user", (req, res) => {
+  console.log("hit api/auth/current_user");
+  if (req.isAuthenticated()) {
+    const userResponse = { ...req.user };
+    delete userResponse.passwordHash;
+    res.json({
+      authenticated: true,
+      username: req.user.username,
+      user: userResponse,
+    });
   } else {
-    res.status(400).json({ error: "Not logged in" });
+    res.json({ authenticated: false });
   }
 });
 
-LoginRouter.post("/logout", (req, res) => {
-  console.log("hit api/logout");
-  req.session.destroy((error) => {
+loginRouter.post("/logout", (req, res) => {
+  console.log("hit api/auth/logout");
+  req.logout((error) => {
     if (error) {
-      return res.status(500).json({
-        success: false,
-        message: "Logout failed",
-      });
+      console.error("Logout error:", error);
+      return res.status(500).json({ error: "Logout failed" });
     }
     res.json({
       success: true,
-      message: "successfully logged out",
+      message: "Successfully logged out",
     });
   });
 });
 
-LoginRouter.put("/update-profile", async (req, res) => {
-  console.log("hit api/update_profile");
-  const currentName = req.session.username;
-  console.log("currentName", currentName);
+loginRouter.put("/update-profile", async (req, res) => {
+  console.log("hit api/auth/update_profile");
 
-  if (!currentName) {
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "User not logged in" });
   }
+
   try {
     let { username, password } = req.body;
     // save inputs and remove whitespace
     username = username?.trim() || null;
     password = password?.trim() || null;
+    console.log("currentName", username);
 
     if (!username && !password) {
       return res
@@ -160,35 +129,38 @@ LoginRouter.put("/update-profile", async (req, res) => {
         .json({ error: "Please enter a new username or password" });
     }
 
-    const db = await connectDB();
+    const db = await getDB();
     const usersCollection = db.collection("users");
-    const currentUser = await usersCollection.findOne({
-      username: currentName,
-    });
-    if (!currentUser) {
-      return res.status(404).json({ error: "Logged in user not found" });
-    }
-    if (username && username.toLowerCase() !== currentName) {
-      const existingUser = await usersCollection.findOne({
-        username: username.toLowerCase(),
-      });
+
+    const updateData = {};
+
+    // is it taken?
+    if (username && username.toLowerCase() !== req.user.username) {
+      const existingUser = await findUserByUsername(username.toLowerCase());
       if (existingUser) {
         return res.status(400).json({ error: "Username already exists" });
-      } else {
-        currentUser.username = username.toLowerCase();
-        req.session.username = username.toLowerCase();
+      }
+      updateData.username = username.toLowerCase();
+    }
+
+    if (password) {
+      updateData.passwordHash = await bcrypt.hash(password, 10);
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      await usersCollection.updateOne(
+        { _id: req.user._id },
+        { $set: updateData }
+      );
+
+      if (updateData.username) {
+        req.user.username = updateData.username;
       }
     }
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      currentUser.password = hashedPassword;
-    }
-    await usersCollection.replaceOne({ username: currentName }, currentUser);
-    console.log("Successfully updated user");
     res.json({
       success: true,
       message: "Profile updated successfully",
-      username: username ? username.toLowerCase() : currentName,
+      username: updateData.username || req.user.username,
     });
   } catch (err) {
     console.error("Error updating user:", err);
@@ -196,19 +168,24 @@ LoginRouter.put("/update-profile", async (req, res) => {
   }
 });
 
-LoginRouter.delete("/delete-profile", async (req, res) => {
-  console.log("hit api/delete-profile");
-  const currentName = req.session.username;
-  if (!currentName) {
+loginRouter.delete("/delete-profile", async (req, res) => {
+  console.log("hit api/auth/delete-profile");
+
+  if (!req.isAuthenticated()) {
     return res.status(401).json({ error: "User not logged in" });
   }
+
   try {
-    const db = await connectDB();
+    const db = await getDB();
     const usersCollection = db.collection("users");
-    await usersCollection.deleteOne({ username: currentName });
-    req.session.destroy((error) => {
-      if (error) {
-        return res.status(500).json({ error: "Failed to delete user" });
+    await usersCollection.deleteOne({ _id: req.user._id });
+
+    req.logout((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res
+          .status(500)
+          .json({ error: "Failed to logout after deletion" });
       }
       res.json({
         success: true,
@@ -221,4 +198,4 @@ LoginRouter.delete("/delete-profile", async (req, res) => {
   }
 });
 
-export default LoginRouter;
+export default loginRouter;

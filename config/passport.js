@@ -1,30 +1,34 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcrypt";
-import { findUserByEmail, findUserById } from "../models/users.js";
+import { findUserById, findUserByUsername } from "../models/users";
 
 const strategy = new LocalStrategy(
-  { usernameField: "email", passwordField: "password" },
-  async (email, password, done) => {
+  { usernameField: "username", passwordField: "password" },
+  async (username, password, done) => {
     try {
-      const user = findUserByEmail(email);
+      console.log("Passport: Looking for user:", username);
+      const user = await findUserByUsername(username);
+      console.log("Passport: Found user:", user ? "Yes" : "No");
       if (!user) {
-        // Case 2. User not found or password incorrect
+        console.log("Passport: User not found");
         return done(null, false, { message: "User or password incorrect" });
       }
+      console.log("Passport: Comparing password");
 
       const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
       if (!isValidPassword) {
-        // Case 2. User not found or password incorrect
+        console.log("Passport: Password incorrect");
         return done(null, false, { message: "User or password incorrect" });
       }
+      console.log("Passport: Authentication successful");
 
-      delete user.passwordHash;
-      // Case 3. User found and password correct
-      return done(null, user);
+      const userNoPass = { ...user };
+      delete userNoPass.passwordHash;
+      return done(null, userNoPass);
     } catch (error) {
-      // Case 1. There is an error
+      console.error("Passport: Error:", error);
       done(error);
     }
   }
@@ -34,13 +38,15 @@ passport.use(strategy);
 
 // Serialize user (what to store in session)
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user._id);
 });
 
-// Deserialize user (how to retrieve user from session)
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   try {
-    const user = findUserById(id);
+    const user = await findUserById(id);
+    if (user) {
+      delete user.passwordHash;
+    }
     done(null, user);
   } catch (error) {
     done(error);
