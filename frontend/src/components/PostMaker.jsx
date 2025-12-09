@@ -5,6 +5,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Server from "../modules/ServerConnector";
 import user from "../modules/user";
+import styles from "../css/PostMaker.module.css";
 
 export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
   const [radioValue, setRadioValue] = useState("0");
@@ -201,7 +202,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
             ))}
           </ButtonGroup>
           <Button
-            className="submit-button"
+            className={styles.submitButton}
             type="submit"
             disabled={isSubmitting}
           >

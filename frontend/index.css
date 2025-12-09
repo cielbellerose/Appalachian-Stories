@@ -1,6 +1,7 @@
 :root {
   --accent: #9d69a3; /*Vintage Lavender - Accent*/
-  --accent-hover: #D9DBF1; /*Lavender - Accent Light*/
+  --accent-hover: #724976; /*Lavender*/
+  --background2: #D9DBF1; /*Dark Purple D9DBF1*/
   --background: #F1FFE7; /*Honeydew - Background */
   --light-main: #2e933C; /*Forest Green*/
   --main: #297045; /*Turf Green*/

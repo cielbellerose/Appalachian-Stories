@@ -19,6 +19,7 @@ export default function EditProfileForm({
 
     if (!username.trim() && !password.trim()) {
       toast.error("Please enter a new username or password");
+      setLoading(false);
       return;
     }
 

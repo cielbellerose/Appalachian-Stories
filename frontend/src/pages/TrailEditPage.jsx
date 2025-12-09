@@ -17,7 +17,8 @@ export default function TrailEditPage() {
         setCurrentUser(currentUser);
 
         if (currentUser) {
-          const userId = currentUser.id || currentUser._id || currentUser.username;
+          const userId =
+            currentUser.id || currentUser._id || currentUser.username;
           const photosData = await Server.getUserPhotos(userId);
           setPhotos(photosData);
         }
@@ -53,9 +54,7 @@ export default function TrailEditPage() {
               {loading ? (
                 <p>Loading photos...</p>
               ) : photos.length === 0 ? (
-                <div className="alert alert-info mt-3">
-                  No photos uploaded yet.
-                </div>
+                <div className={"mt-3"}>No photos uploaded yet.</div>
               ) : (
                 <div className="mt-4">
                   <h3>Your Photos ({photos.length})</h3>
@@ -69,9 +68,6 @@ export default function TrailEditPage() {
                             className="card-img-top"
                             style={{ height: "200px", objectFit: "cover" }}
                           />
-                          <div className="card-body">
-                            <p className="card-text small">{photo}</p>
-                          </div>
                         </div>
                       </div>
                     ))}
@@ -80,9 +76,7 @@ export default function TrailEditPage() {
               )}
             </>
           ) : (
-            <div className="alert alert-warning">
-              Please log in to upload and manage photos.
-            </div>
+            <div>Please log in to upload and manage photos.</div>
           )}
         </div>
       </div>

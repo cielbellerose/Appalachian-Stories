@@ -5,44 +5,60 @@ import Modal from "react-bootstrap/Modal";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import EditProfileForm from "./EditProfileForm.jsx";
-import user from "../modules/user.js";
 import Server from "../modules/ServerConnector.js";
 import styles from "../css/Navbar.module.css";
 
 function TrailNavbar() {
   const [username, setUsername] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function checkLogin() {
-      const currentUsername = await user.getCurrentUser();
-      console.log("currentusername:", currentUsername);
-      if (currentUsername) {
-        setUsername(currentUsername);
+      try {
+        const userData = await Server.getCurrentUser();
+        console.log("Current user data:", userData);
+        if (userData && userData.authenticated) {
+          setUsername(userData.username || userData.user?.username);
+        } else {
+          setUsername(null);
+        }
+      } catch (error) {
+        console.error("Error checking login:", error);
+        setUsername(null);
       }
     }
     checkLogin();
   }, []);
 
   const handleLogout = async () => {
-    try {
-      const response = await fetch(Server.serverName + "/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+    if (loading) return;
 
-      if (response.ok) {
-        setUsername(null);
-        navigate("/login");
-      }
+    try {
+      setLoading(true);
+      await Server.logoutUser();
+
+      setUsername(null);
+      navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
+      setUsername(null);
+      navigate("/login");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleProfileUpdate = (newUsername) => {
     setUsername(newUsername);
+  };
+
+  const handlePostsClick = (e) => {
+    if (!username) {
+      e.preventDefault();
+      navigate("/login");
+    }
   };
 
   return (
@@ -56,10 +72,17 @@ function TrailNavbar() {
             <Nav.Link href="/" className={styles.navLink}>
               Upload
             </Nav.Link>
-            <Nav.Link href={`/viewPost/${username}`} className={styles.navLink}>
+            <Nav.Link
+              href={`/viewPost/${username}`}
+              className={styles.navLink}
+              onClick={handlePostsClick}
+            >
               Posts
             </Nav.Link>
             <Nav.Link href="/new" className={styles.navLink}>
+              New
+            </Nav.Link>
+            <Nav.Link href="/view" className={styles.navLink}>
               View
             </Nav.Link>
           </Nav>
@@ -72,11 +95,16 @@ function TrailNavbar() {
                 <Nav.Link
                   onClick={() => setShowEditModal(true)}
                   className={styles.navLink}
+                  disabled={loading}
                 >
                   Edit Profile
                 </Nav.Link>
-                <Nav.Link onClick={handleLogout} className={styles.navLink}>
-                  Logout
+                <Nav.Link
+                  onClick={handleLogout}
+                  className={styles.navLink}
+                  disabled={loading}
+                >
+                  {loading ? "Logging out..." : "Logout"}
                 </Nav.Link>
               </>
             ) : (
