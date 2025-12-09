@@ -17,26 +17,14 @@ export default function RegisterForm({ onLoginSelection }) {
     setLoading(true);
 
     try {
-      const res = await fetch(Server.serverName + "/api/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error(data.error || "Signup failed");
-        setLoading(false);
-        return;
-      }
+      const data = await Server.signupUser(username, password);
 
       toast.success("Account created successfully!");
-
       console.log("Signup successful", data);
+
+      setUsername("");
+      setPassword("");
+
       navigate("/");
     } catch (error) {
       toast.error("Error signing up");

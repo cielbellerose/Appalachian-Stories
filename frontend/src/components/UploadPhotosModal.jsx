@@ -3,60 +3,52 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import styles from "../css/Modal.module.css";
 import toast from "react-hot-toast";
-import Server from "../modules/ServerConnector.js"
+import Server from "../modules/ServerConnector.js";
 
-export default function UploadPhotostModal({ onPhotoUploaded }) {
+export default function UploadPhotosModal({ onPhotoUploaded }) {
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
 
   const handleClose = () => {
     setShow(false);
     setFile(null);
+    setUploading(false);
   };
 
   const handleShow = () => setShow(true);
 
   const handleFileChange = (e) => {
-    console.log("handleFileChange called!");
-    setFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    if (!selectedFile) return;
+
+    console.log("Handle file change:", selectedFile);
+    setFile(selectedFile);
   };
 
   const handleUpload = async () => {
-    console.log("handleUpload called!");
     if (!file) {
       toast.error("Please select a file");
       return;
     }
+    setUploading(true);
     console.log("File to upload:", file);
-    const formData = new FormData();
-
-    formData.append("photo", file);
-    console.log("About to fetch...");
-
-
     try {
-      const res = await fetch(Server.serverName + "/api/upload", {
-        method: "POST",
-        body: formData,
-        credentials: "include"
-      });
-      console.log("Response received:", res.status);
+      const formData = new FormData();
+      formData.append("photo", file);
+      console.log("About to fetch...");
 
-      const text = await res.text();
-      console.log("Response text:", text);
+      const data = await Server.uploadPicture(formData);
+      toast.success("Upload successful!");
 
-      const data = JSON.parse(text);
-      if (res.ok) {
-        toast.success("Upload successful!");
-        onPhotoUploaded(data.filename); // send to parent
-        handleClose();
-      } else {
-        toast.error("Upload failed");
-      }
+      onPhotoUploaded(data.filename);
+      handleClose();
     } catch (error) {
       console.log("Caught error:", error);
-      toast.error("Upload error");
+      toast.error("Upload failed");
       console.error(error);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -81,18 +73,30 @@ export default function UploadPhotostModal({ onPhotoUploaded }) {
             accept=".png,.jpg,.jpeg,.gif"
             onChange={handleFileChange}
             className={styles.hiddenInput}
+            disabled={uploading}
           />
-          <label htmlFor="image-input" className={styles.customButton}>
-            Choose File
+          <label
+            htmlFor="image-input"
+            className={`${styles.customButton} ${uploading ? styles.disabled : ""}`}
+          >
+            {uploading ? "Uploading..." : "Choose File"}
           </label>
           {file && <p className={styles.selected}>Selected: {file.name}</p>}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button
+            variant="secondary"
+            onClick={handleClose}
+            disabled={uploading}
+          >
             Close
           </Button>
-          <Button className={styles.saveButton} onClick={handleUpload}>
-            Save Changes
+          <Button
+            className={styles.saveButton}
+            onClick={handleUpload}
+            disabled={!file || uploading}
+          >
+            {uploading ? "Uploading..." : "Upload Photo"}
           </Button>
         </Modal.Footer>
       </Modal>

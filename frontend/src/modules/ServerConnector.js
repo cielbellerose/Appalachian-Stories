@@ -214,4 +214,12 @@ me.uploadPicture = async (formData) => {
   }
 };
 
+me.getUserPhotos = async (userId) => {
+  const response = await fetch(`${me.serverName}/api/pic/user/${userId}`, {
+    credentials: "include"
+  });
+  if (!response.ok) throw new Error("Failed to fetch photos");
+  return await response.json();
+};
+
 export default me;
