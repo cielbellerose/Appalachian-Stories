@@ -57,7 +57,7 @@ export default function LoginForm({ onSignupSelection }) {
           />
         </form>
         <div>
-          <button className="accent-button" onClick={onSignupSelection}>
+          <button className="secondary-button" onClick={onSignupSelection}>
             Sign Up
           </button>
         </div>

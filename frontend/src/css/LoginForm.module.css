@@ -29,24 +29,7 @@
   border-color: var(--accent-hover);
   box-shadow: 0 0 0 3px var(--background2);
 }
-
-.submitButton {
-  padding: 15px;
-  background-color: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.submitButton:hover {
-  background-color: var(--accent-hover);
-}
-
+/* 
 .switchButton {
   padding: 10px;
   background-color: var(--background2);
@@ -59,8 +42,4 @@
 
 .switchButton:hover {
   background-color: var(--accent);
-}
-
-.requirements {
-  color: var(--text);
-}
+} */

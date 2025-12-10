@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import TrailNavbar from "../components/Navbar.jsx";
 import Post from "../components/Post.jsx";
 import userModule from "../modules/user.js";
-import { Button, Alert, Spinner } from "react-bootstrap";
 import Server from "../modules/ServerConnector.js";
 import Map from "../components/Map.jsx";
 
@@ -52,10 +51,6 @@ export default function PostListPage() {
     fetchPosts();
   }, [user, reloadNeeded]);
 
-  const handleCreateNewPost = () => {
-    navigate("/new");
-  };
-
   const handleRefresh = () => {
     setReloadNeeded((prev) => !prev);
   };
@@ -67,97 +62,90 @@ export default function PostListPage() {
   return (
     <>
       <TrailNavbar />
-      <div
-        className="contentContainer"
-        style={{ display: "flex", gap: "20px", padding: "20px" }}
-      >
-        {/* Left column - Map */}
-        <div style={{ flex: 2, minWidth: "0" }}>
-          <h1>{user ? `${user}'s Adventure` : "My Adventure"}</h1>
-          <div className="map" style={{ marginTop: "20px" }}>
-            {url && (
-              <Map
-                url={url}
-                percent={percent}
-                setCurrentPercent={(v) => setCurrentPercent(v)}
-                openPic={openPic}
-                setOpenPic={(v) => {
-                  setOpenPic(v);
-                }}
-              />
-            )}
-          </div>
-        </div>
+      <div className="contentContainer" style={{ padding: "20px" }}>
+        <h1>{user ? `${user}'s Adventure` : "My Adventure"}</h1>
 
-        {/* Right column - Posts list */}
-        <div style={{ flex: 1, minWidth: "400px" }}>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <div></div> {/* Empty div for spacing */}
-            <div>
-              <Button
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            height: "calc(100vh - 150px)",
+          }}
+        >
+          {/* Left map */}
+          <div style={{ flex: 2, display: "flex", flexDirection: "column" }}>
+            <div className="map" style={{ flex: 1, marginTop: "0" }}>
+              {url && (
+                <Map
+                  url={url}
+                  percent={percent}
+                  setCurrentPercent={(v) => setCurrentPercent(v)}
+                  openPic={openPic}
+                  setOpenPic={(v) => {
+                    setOpenPic(v);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+          {/* Right posts lists */}
+          <div
+            style={{
+              flex: 1,
+              minWidth: "400px",
+              maxWidth: "500px",
+              overflowY: "auto",
+              paddingRight: "10px",
+            }}
+          >
+            <div style={{ marginBottom: "20px", textAlign: "right" }}>
+              <button
                 className="accent-button"
                 onClick={handleRefresh}
                 disabled={loading}
               >
                 {loading ? "Refreshing..." : "Refresh"}
-              </Button>
-              <Button
-                className="accent-button"
-                variant="primary"
-                onClick={handleCreateNewPost}
-                disabled={!currentUser}
+              </button>
+            </div>
+            {loading ? (
+              <div className="text-center" style={{ padding: "40px 0" }}>
+                <p className="mt-2">Loading posts...</p>
+              </div>
+            ) : error ? (
+              <div>
+                <h2>Error Loading Posts</h2>
+                <p>{error}</p>
+                {!currentUser && (
+                  <button
+                    className="accent-button"
+                    onClick={() => navigate("/login")}
+                  >
+                    Go to Login
+                  </button>
+                )}
+              </div>
+            ) : posts.length === 0 ? (
+              <h2>No Posts Found</h2>
+            ) : (
+              <div
+                className="posts-list"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "15px",
+                }}
               >
-                Create New Post
-              </Button>
-            </div>
+                {posts.map((post) => (
+                  <Post
+                    key={post._id || post.id}
+                    post={post}
+                    setReloadNeeded={setReloadNeeded}
+                    canModify={canModify}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-
-          {loading ? (
-            <div className="text-center">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner>
-              <p className="mt-2">Loading posts...</p>
-            </div>
-          ) : error ? (
-            <Alert variant="danger">
-              <Alert.Heading>Error Loading Posts</Alert.Heading>
-              <p>{error}</p>
-              {!currentUser && (
-                <Button
-                  variant="outline-danger"
-                  onClick={() => navigate("/login")}
-                >
-                  Go to Login
-                </Button>
-              )}
-            </Alert>
-          ) : posts.length === 0 ? (
-            <Alert variant="info">
-              <Alert.Heading>No Posts Found</Alert.Heading>
-              <p>
-                {user
-                  ? `${user} hasn't created any posts yet.`
-                  : "You haven't created any posts yet."}
-              </p>
-              {!user && currentUser && (
-                <Button variant="outline-info" onClick={handleCreateNewPost}>
-                  Create Your First Post
-                </Button>
-              )}
-            </Alert>
-          ) : (
-            <div className="posts-list">
-              {posts.map((post) => (
-                <Post
-                  key={post._id || post.id}
-                  post={post}
-                  setReloadNeeded={setReloadNeeded}
-                  canModify={canModify}
-                />
-              ))}
-            </div>
-          )}
         </div>
       </div>
     </>

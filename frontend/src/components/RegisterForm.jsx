@@ -7,7 +7,6 @@ import Server from "../modules/ServerConnector.js";
 export default function RegisterForm({ onLoginSelection }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ export default function RegisterForm({ onLoginSelection }) {
 
     try {
       const data = await Server.signupUser(username, password);
-
       toast.success("Account created successfully!");
       console.log("Signup successful", data);
 
@@ -58,15 +56,6 @@ export default function RegisterForm({ onLoginSelection }) {
             required
           />
           <input
-            type="password"
-            placeholder="Confirm Password"
-            className={styles.input}
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={loading}
-            required
-          />
-          <input
             type="submit"
             className={styles.submitButton}
             value={loading ? "Creating Account..." : "Register"}
@@ -75,7 +64,7 @@ export default function RegisterForm({ onLoginSelection }) {
         </form>
         <div>
           <button
-            className="accent-button"
+            className="secondary-button"
             onClick={onLoginSelection}
             disabled={loading}
           >
