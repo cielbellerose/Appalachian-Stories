@@ -174,7 +174,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
 
   return (
     <div className="PostForm">
-      <Form onSubmit={handleSubmit} style={{backgroundColor: "var(--background)"}}>
+      <Form onSubmit={handleSubmit}>
         <h3> Create New Post </h3>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Control
@@ -218,7 +218,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
             type="submit"
             disabled={isSubmitting}
             style={{
-              padding: "8px 8px",
+              padding: "8px",
               marginLeft: "10px",
               fontSize: "16px",
               height: "36px",
