@@ -83,8 +83,8 @@ npm start
 ## Video Demonstration
 https://drive.google.com/file/d/137JU5z0xVe6sGb5lFHf-ULCqn6oUDAbk/view?usp=drive_link
 
-## Original Slides
-https://docs.google.com/presentation/d/1bPgIZJ2jjjCDyiSkk37zimRKcq-IsBCQ0VkTQkHWCtw/edit?usp=sharing
+## Slides
+https://docs.google.com/presentation/d/1gIlv4LPatJoGxkjfmHt9AVMDwJ4xyY2SY66zAUPIHsU/edit?usp=sharing
 
 ## 📜 License  
 This project is licensed under the **MIT License**.  
