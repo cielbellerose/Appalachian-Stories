@@ -21,7 +21,7 @@ root.render(
         <Route path="/" element={<UploadPhotosPage />} />
         <Route path="/new" element={<NewPostsPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/viewpost/:user" element={<PostListPage />} />
+        <Route path="/view/:user" element={<PostListPage />} />
       </Routes>
     </StrictMode>
   </BrowserRouter>

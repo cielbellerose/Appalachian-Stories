@@ -57,7 +57,7 @@ export default function LoginForm({ onSignupSelection }) {
           />
         </form>
         <div>
-          <button className={styles.switchButton} onClick={onSignupSelection}>
+          <button className="accent-button" onClick={onSignupSelection}>
             Sign Up
           </button>
         </div>

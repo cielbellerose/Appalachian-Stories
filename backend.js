@@ -10,7 +10,6 @@ import PicturesRouter from "./routes/PicturesRouter.js";
 
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { findUserByUsername, getAllUsers } from "./models/users.js";
 import { connectDB } from "./db/connection.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -72,7 +71,6 @@ app.use("/user_data", express.static(join(__dirname, "user_data")));
 app.use("/api/auth", LoginRouter);
 app.use("/api/posts", PostsRouter);
 app.use("/api/pic", PicturesRouter);
-
 
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);

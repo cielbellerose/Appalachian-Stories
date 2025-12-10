@@ -57,7 +57,7 @@ export default function EditProfileForm({
       />
 
       <div className={styles.buttonGroup}>
-        <button type="submit" className={styles.submitButton}>
+        <button type="submit" className="accent-button">
           {loading ? "Updating..." : "Update Profile"}
         </button>
         <button type="button" onClick={onClose} className={styles.cancelButton}>

@@ -54,7 +54,7 @@ export default function UploadPhotosModal({ onPhotoUploaded }) {
 
   return (
     <>
-      <button className={styles.button} onClick={handleShow}>
+      <button className="accent-button" onClick={handleShow}>
         Upload Photos
       </button>
       <Modal
@@ -75,10 +75,7 @@ export default function UploadPhotosModal({ onPhotoUploaded }) {
             className={styles.hiddenInput}
             disabled={uploading}
           />
-          <label
-            htmlFor="image-input"
-            className={`${styles.customButton} ${uploading ? styles.disabled : ""}`}
-          >
+          <label htmlFor="image-input" className="accent-button">
             {uploading ? "Uploading..." : "Choose File"}
           </label>
           {file && <p className={styles.selected}>Selected: {file.name}</p>}
@@ -93,7 +90,7 @@ export default function UploadPhotosModal({ onPhotoUploaded }) {
             Close
           </Button>
           <Button
-            className={styles.uploadButton}
+            className="accent-button"
             onClick={handleUpload}
             disabled={!file || uploading}
           >

@@ -75,7 +75,7 @@ export default function RegisterForm({ onLoginSelection }) {
         </form>
         <div>
           <button
-            className={styles.switchButton}
+            className="accent-button"
             onClick={onLoginSelection}
             disabled={loading}
           >

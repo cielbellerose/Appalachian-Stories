@@ -95,14 +95,14 @@ export default function PostListPage() {
             <div></div> {/* Empty div for spacing */}
             <div>
               <Button
-                variant="outline-primary"
-                className="me-2"
+                className="accent-button"
                 onClick={handleRefresh}
                 disabled={loading}
               >
                 {loading ? "Refreshing..." : "Refresh"}
               </Button>
               <Button
+                className="accent-button"
                 variant="primary"
                 onClick={handleCreateNewPost}
                 disabled={!currentUser}

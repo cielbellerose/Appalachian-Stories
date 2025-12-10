@@ -5,7 +5,6 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ToggleButton from "react-bootstrap/ToggleButton";
 import Server from "../modules/ServerConnector";
 import user from "../modules/user";
-import styles from "../css/PostMaker.module.css";
 
 export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
   const [radioValue, setRadioValue] = useState("0");
@@ -134,8 +133,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
   }, [PrevData]);
 
   /* This covers setting our actual picture parameters. We need to be cautious about overwriting
-  user choices on changing parts, and so we have a delayer.
-    */
+  user choices on changing parts, and so we have a delayer */
   useEffect(() => {
     if (delayPictureSet) {
       setDelayPictureSet(false);
@@ -202,7 +200,7 @@ export default function PostMaker({ openPic, setOpenPic, percent, PrevData }) {
             ))}
           </ButtonGroup>
           <Button
-            className={styles.submitButton}
+            className="accent-button"
             type="submit"
             disabled={isSubmitting}
           >

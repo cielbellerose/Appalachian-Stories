@@ -1,11 +1,13 @@
-# Hiking-Photos
+# Appalachian-Stories
 
 ## Description
-CS5610 Project 3
+CS5610 Final Project
 
 <Description>
 
 This is a full stack application with Node + Express + Mongo and React. The website is a hiking photo story site for users to create collections of pictures at different sections of their hike in order to share their stories with others!
+
+This assignment built off of previous Hiking-Stories, implementing custom font, color palette, and usability improvements from usability studies. 
 
 - **Authors:** Jen Gordon and Kinsey Bellerose
 - **Website Link:** https://rad-daifuku-c4aece.netlify.app/login
@@ -15,11 +17,9 @@ This is a full stack application with Node + Express + Mongo and React. The webs
 
 ## Site Structure  
 - **Login Page (`LoginPage.jsx`)** Login or Sign up
-- **Trail Edit page(`UploadPhotosPage.jsx`)** Upload photos!
-- **Post List Page (`PostListPage.jsx`)** See a list of all your posts
-- **Presentation Page(`PresentationPage.jsx`)** Present an individual post! 
-- **New Post Page(`NewPostsPage.jsx`)** Create a post! View your photos on the map!
-
+- **Trail Edit page(`UploadPhotosPage.jsx`)** Upload photos of your hike!
+- **Post List Page (`PostListPage.jsx`)** View all your posts
+- **New Post Page(`NewPostsPage.jsx`)** Create a post with your pictures!
 
 ## Screenshots
 

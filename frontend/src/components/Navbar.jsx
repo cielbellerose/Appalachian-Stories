@@ -73,7 +73,7 @@ function TrailNavbar() {
               Upload
             </Nav.Link>
             <Nav.Link
-              href={`/viewpost/${username}`}
+              href={`/view/${username}`}
               className={styles.navLink}
               onClick={handlePostsClick}
             >
