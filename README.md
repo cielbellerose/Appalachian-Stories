@@ -13,7 +13,7 @@ This assignment built off of previous Hiking-Stories, implementing custom font, 
 - **Website Link:** https://appalachian-stories.onrender.com/login
 - **Course Info:** https://johnguerra.co/classes/webDevelopment_fall_2025/
 - **Original Design Document:** https://docs.google.com/document/d/1NMsJMASNX7XtOqjRp_us2I-1Vf1pIF_oEoNA8RM_MgE/edit?usp=sharing
-- **Usability Studies:**
+- **Usability Studies:** https://docs.google.com/document/d/1XB_qbm8nsvwOcLA5ET75uCmalgAM83WIdFGVcImwouo/edit?usp=sharing
 
 
 ## Site Structure  
@@ -26,6 +26,11 @@ This assignment built off of previous Hiking-Stories, implementing custom font, 
 
 <img width="1439" height="867" alt="Screenshot 2025-12-09 at 11 28 37 PM" src="https://github.com/user-attachments/assets/cfaf7343-0efa-4fc6-9858-955466134a58" />
 
+<img width="1437" height="619" alt="Screenshot 2025-12-09 at 11 37 35 PM" src="https://github.com/user-attachments/assets/815ecb4c-0f14-4ca3-8717-3e8caf2e1705" />
+
+<img width="1439" height="729" alt="Screenshot 2025-12-09 at 11 37 47 PM" src="https://github.com/user-attachments/assets/adb5ac46-30dd-4ba0-9811-91fabacf6f49" />
+
+<img width="1148" height="738" alt="Screenshot 2025-12-09 at 11 39 04 PM" src="https://github.com/user-attachments/assets/5ebadac9-3327-40fe-b50a-d6af25e7d37c" />
 
 ## Technologies Used 
 - HTML5
@@ -40,6 +45,7 @@ This assignment built off of previous Hiking-Stories, implementing custom font, 
 ## Google Fonts Used
 - Bitter
 - Raleway
+
 **Font link:** https://www.fontpair.co/pairings/bitter-raleway
 
 ## Instructions to Build  
